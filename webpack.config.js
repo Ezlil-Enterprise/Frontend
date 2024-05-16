@@ -1,30 +1,33 @@
-const path = require('path');
+const path=require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-
-module.exports = {
+module.exports={
     entry: "./src/index.js",
-    output: {
-        filename: "index.bundle.js",
+    output:{
+        filename:"index.bundle.js",
         path: path.resolve(__dirname, "dist"),
+        publicPath: '/',
     },
-    devServer: {
-        port: 3010,
+    devServer:{
+        port:3015,
+        historyApiFallback: true,
         static: {
-            directory: path.join(__dirname, 'public'),
-        },
+            directory: path.join(__dirname, 'public'), 
+          },
+        
     },
-    plugins: [
+    plugins:[
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "public", "index.html"),
-        }),
+            publicPath: '/',
+          }),
     ],
-    module: {
-        rules: [
+    module:{
+        rules:[
             {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader'
+                test:/\.(js|jsx)$/,
+                exclude:/node_modules/,
+                use:{
+                    loader:'babel-loader'
                 }
             },
             {
@@ -38,7 +41,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ["style-loader", "css-loader"],
-            },
+              },
         ]
     }
 }
