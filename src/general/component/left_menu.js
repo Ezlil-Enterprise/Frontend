@@ -3,9 +3,10 @@ import Sider from 'antd/es/layout/Sider';
 import React, { useState } from 'react';
 import {TransactionOutlined,CustomerServiceOutlined,RiseOutlined,SettingOutlined,ProductOutlined,UsergroupAddOutlined,ShoppingCartOutlined,LogoutOutlined} from "@ant-design/icons";
 import "../asset/less/left_menu.less";
+import { useNavigate } from 'react-router-dom';
 const LeftMenu = () => {
     const [selectedKey, setSelectedKey] = useState("0");
-
+    const navigate=useNavigate();
     let role = "Super Admin";
     const allowedMenuItems = {
       "Super Admin": ["0", "1", "2", "3","4","5", "6","7"],
@@ -72,7 +73,7 @@ const LeftMenu = () => {
       };
     
     return (
-        <Sider  breakpoint="xxl"
+        <Sider  breakpoint='sm'
          trigger={null} className="left-menu"  theme='light' collapsedWidth={70} style={{boxShadow:" rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"}}  >
             <Image src='./images/logo.png' style={{width:"65px",height:"64px"}}/>
         <Menu mode="inline" selectedKeys={[selectedKey]} onClick={({ key }) => handleMenuItemClick(key)} className="temp" items={menuItems.filter((item) => allowedMenuItems[role].includes(item.key)).map((item) => item)} />
