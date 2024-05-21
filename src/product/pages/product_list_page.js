@@ -1,17 +1,29 @@
 import { Button, Checkbox, Col, Flex, Row, Select, Table, Typography } from "antd";
 import Search from "antd/es/transfer/search";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {PlusOutlined,MoreOutlined } from '@ant-design/icons';
 import { getProductDetails } from "../api/product";
 const ProductListPage = () => {
-useEffect(()=>{
-  const productData=getProductDetails();
-  console.log(productData);
-},[])
+  const [productData, setProductData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const productResponseData = await getProductDetails();
+        setProductData(productResponseData);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching product data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
   const productColumn= [
     {
-      title: 'ID',
-      dataIndex: 'product_id',
+      title: 'SKU',
+      dataIndex: 'SKU',
       
     },
     {
@@ -129,7 +141,9 @@ useEffect(()=>{
             <Table columns={productColumn} rowSelection={{
           type:'checkbox',
           ...rowSelection,
-        }}/>
+        }} dataSource={productData}
+        loading={loading}
+        rowKey="SKU"/>
           </Col>
         </Row>
       </Col>
