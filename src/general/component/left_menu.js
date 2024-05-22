@@ -73,8 +73,8 @@ const LeftMenu = () => {
       };
     
     return (
-        <Sider  breakpoint='sm'
-         trigger={null} className="left-menu"  theme='light' collapsedWidth={70} style={{boxShadow:" rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"}}  >
+        <Sider  breakpoint='xxl'
+         trigger={null} className="left-menu"  theme='light' collapsedWidth={70} style={{boxShadow:" rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",height:"200vh"}}  >
             <Image src='./images/logo.png' style={{width:"65px",height:"64px"}}/>
         <Menu mode="inline" selectedKeys={[selectedKey]} onClick={({ key }) => handleMenuItemClick(key)} className="temp" items={menuItems.filter((item) => allowedMenuItems[role].includes(item.key)).map((item) => item)} />
       </Sider>

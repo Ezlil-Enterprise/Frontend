@@ -1,11 +1,13 @@
 import { Button, Checkbox, Col, Flex, Row, Select, Table, Typography } from "antd";
 import Search from "antd/es/transfer/search";
 import React, { useEffect, useState } from "react";
-import {PlusOutlined,MoreOutlined } from '@ant-design/icons';
+import {PlusOutlined,DeleteOutlined} from '@ant-design/icons';
 import { getProductDetails } from "../api/product";
+import { useNavigate } from "react-router-dom";
 const ProductListPage = () => {
   const [productData, setProductData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate=useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -92,9 +94,12 @@ const ProductListPage = () => {
     {
       title: 'Action',
       dataIndex: 'action',
-      render: () => <MoreOutlined/>,
+      render: () => <DeleteOutlined style={{color:"#ff0000"}}/>,
     },
   ];
+  const handleAddProducts=()=>{
+    navigate('/products/addproduct');
+  }
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -133,7 +138,7 @@ const ProductListPage = () => {
           </Col>
          
           <Col span={18} style={{textAlign:'end'}}>
-          <Button type="primary" icon={<PlusOutlined />} >
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAddProducts}>
            Add Products
           </Button>
           </Col>
