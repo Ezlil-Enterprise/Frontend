@@ -1,13 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  userInfo: { 
-    username: "",
-    email: "",
-    password: "",
-    isAdmin: false,
-  },
-  isLoggedIn: false,
+  userInfo: null,
 };
 
 const userSlice = createSlice({
@@ -15,19 +9,13 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser(state, action) {
-      state.userInfo = action.payload;
-      state.isLoggedIn = true;
+      state.userInfo = action.payload.data;
     },
     logout(state) {
-      state.userInfo = initialState.userInfo;
-      state.isLoggedIn = false;
-    },
-    updateFormValue(state, action) {
-      const { field, value } = action.payload;
-      state.userInfo[field] = value;
+      state.userInfo = null;
     },
   },
 });
 
-export const { setUser, logout, updateFormValue } = userSlice.actions;
+export const { setUser, logout } = userSlice.actions;
 export default userSlice.reducer;

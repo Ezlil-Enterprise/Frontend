@@ -1,18 +1,48 @@
-import React from "react";
-import { Layout, Row, Col, Avatar, Input, Flex } from "antd";
-import { useSelector } from "react-redux";
-import { SearchOutlined, BellOutlined, MoonOutlined } from "@ant-design/icons";
+import React, { useEffect } from "react";
+import { Layout, Row, Col, Avatar, Input, Space } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, logout } from "../../store/reducers/user";
+import {
+  SearchOutlined,
+  BellOutlined,
+  MoonOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import LeftMenu from "./left_menu";
+import { useLocation, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const { Header, Content } = Layout;
 
 const MainLayout = ({ children }) => {
+  const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user.userInfo);
-  console.log(userInfo);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = Cookies.get("user");
+    if (user) {
+      dispatch(setUser(JSON.parse(user)));
+    } else {
+      if (location.pathname !== "/") {
+        navigate("/");
+      }
+    }
+    if (location.pathname === "/") {
+      dispatch(logout());
+    }
+  }, [dispatch, location.pathname, navigate]);
+
+  const handleLogout = () => {
+    Cookies.remove("user");
+    dispatch(logout());
+    navigate("/");
+  };
 
   return (
     <>
-      {userInfo?.isAdmin == true ? (
+      {userInfo?.email === "adm@gmail.com" ? (
         <Layout className="main-layout">
           <LeftMenu />
           <Layout className="main-right">
@@ -22,11 +52,19 @@ const MainLayout = ({ children }) => {
                   <Input placeholder="Search" prefix={<SearchOutlined />} />
                 </Col>
                 <Col span={16}>
-                  <Flex gap="large" align="center" justify="end">
+                  <Space
+                    size="large"
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                    }}
+                  >
                     <MoonOutlined />
                     <BellOutlined />
+                    <LogoutOutlined onClick={handleLogout} />
                     <Avatar src="./images/user.jpg" />
-                  </Flex>
+                  </Space>
                 </Col>
               </Row>
             </Header>
