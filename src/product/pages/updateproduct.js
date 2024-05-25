@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Col,
   Form,
@@ -10,37 +12,28 @@ import {
   Button,
   Space,
 } from "antd";
-import React, { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
-import "../asset/less/addproduct.less";
 import { InboxOutlined } from "@ant-design/icons";
-import { addProductData } from "../api/product";
+import { getProductDetailsByID, updateProductDetails } from "../api/product";
+import "../asset/less/addproduct.less";
+
 const { Option } = Select;
 const { Dragger } = Upload;
 
-const Addproduct = () => {
+const UpdateProduct = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const ingredientsoptions = [
-    {
-      label: "Glyserin",
-      value: "glyserin",
-    },
-    {
-      label: "Rose Essence",
-      value: "rose_essence",
-    },
+    { label: "Glyserin", value: "glyserin" },
+    { label: "Rose Essence", value: "rose_essence" },
   ];
 
   const selectAfter = (
-    <Select
-      defaultValue="g"
-      style={{
-        width: 60,
-      }}
-    >
+    <Select defaultValue="g" style={{ width: 60 }}>
       <Option value="g">g</Option>
       <Option value="ml">ml</Option>
     </Select>
@@ -59,46 +52,69 @@ const Addproduct = () => {
     fileList,
   };
 
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await getProductDetailsByID(id);
+
+        if (response) {
+          form.setFieldsValue(response);
+
+          if (response.p_image) {
+            setFileList([
+              {
+                uid: "-1",
+                name: response.p_image.split("/").pop(),
+                status: "done",
+                url: `http://localhost:4001/${response.p_image}`,
+              },
+            ]);
+          }
+        } else {
+          console.error("Invalid response structure:", response);
+          message.error("Failed to fetch product details");
+        }
+      } catch (error) {
+        console.error("Failed to fetch product details:", error);
+        message.error("Failed to fetch product details");
+      }
+    };
+
+    fetchProduct();
+  }, [id, form]);
+
   const onFinish = async (values) => {
     try {
-      const formData = new FormData();
-      for (const key in values) {
-        if (key === "p_description") {
-          formData.append(key, values[key].replace(/<[^>]+>/g, ""));
-        } else {
-          formData.append(key, values[key]);
-        }
-      }
+      values.p_description = values.p_description.replace(/<[^>]+>/g, "");
+
       if (fileList.length > 0) {
-        formData.append("p_image", fileList[0]);
+        values.p_image = fileList[0];
       }
 
-      const addProductDataResponse = await addProductData(formData);
-      if (addProductDataResponse) {
-        message.success("Product created successfully!");
-        form.resetFields();
-        setFileList([]);
+      const updateProductDataResponse = await updateProductDetails(id, values);
+
+      if (updateProductDataResponse) {
+        message.success("Product updated successfully!");
+        navigate("/products");
       }
     } catch (error) {
       if (error.response) {
         message.error(
-          `Failed to create product: ${
-            error.response.data.error || "Server error"
+          `Failed to update product: ${
+            error.response.data.message || "Server error"
           }`
         );
       } else if (error.request) {
-        console.error("Request data:", error.request);
-        message.error("Failed to create product: No response from server");
+        message.error("Failed to update product: No response from server");
       } else {
-        console.error("Error message:", error.message);
-        message.error(`Failed to create product: ${error.message}`);
+        message.error(`Failed to update product: ${error.message}`);
       }
     }
   };
 
   return (
     <Row gutter={[16, 16]} style={{ padding: "15px" }}>
-      <Col span={24}>Add Products</Col>
+      <Col span={24}>Update Product</Col>
       <Col
         span={24}
         style={{
@@ -115,12 +131,7 @@ const Addproduct = () => {
                   <Form.Item
                     label="Product Name"
                     name="p_name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Name is required.",
-                      },
-                    ]}
+                    rules={[{ required: true, message: "Name is required." }]}
                   >
                     <Input placeholder="Eg: Rose" />
                   </Form.Item>
@@ -130,10 +141,7 @@ const Addproduct = () => {
                     label="Product Description"
                     name="p_description"
                     rules={[
-                      {
-                        required: true,
-                        message: "Description is required.",
-                      },
+                      { required: true, message: "Description is required." },
                     ]}
                   >
                     <ReactQuill
@@ -148,10 +156,7 @@ const Addproduct = () => {
                     name="p_category"
                     label="Category"
                     rules={[
-                      {
-                        required: true,
-                        message: "Category is required.",
-                      },
+                      { required: true, message: "Category is required." },
                     ]}
                   >
                     <Select placeholder="--Select--" allowClear>
@@ -166,12 +171,7 @@ const Addproduct = () => {
                   <Form.Item
                     label="SKU"
                     name="SKU"
-                    rules={[
-                      {
-                        required: true,
-                        message: "SKU is required.",
-                      },
-                    ]}
+                    rules={[{ required: true, message: "SKU is required." }]}
                     tooltip="stock keeping unit"
                   >
                     <Input placeholder="SKU" />
@@ -182,18 +182,10 @@ const Addproduct = () => {
                     label="Regular Price"
                     name="regular_price"
                     rules={[
-                      {
-                        required: true,
-                        message: "Regular price is required.",
-                      },
+                      { required: true, message: "Regular price is required." },
                     ]}
                   >
-                    <InputNumber
-                      min={1}
-                      style={{
-                        width: 150,
-                      }}
-                    />
+                    <InputNumber min={1} style={{ width: 150 }} />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -201,49 +193,26 @@ const Addproduct = () => {
                     label="Sales Price"
                     name="sales_price"
                     rules={[
-                      {
-                        required: true,
-                        message: "Sales price is required.",
-                      },
+                      { required: true, message: "Sales price is required." },
                     ]}
                   >
-                    <InputNumber
-                      min={1}
-                      style={{
-                        width: 150,
-                      }}
-                    />
+                    <InputNumber min={1} style={{ width: 150 }} />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item
                     label="Stock"
                     name="quantity_available"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Stock is required.",
-                      },
-                    ]}
+                    rules={[{ required: true, message: "Stock is required." }]}
                   >
-                    <InputNumber
-                      min={1}
-                      style={{
-                        width: 150,
-                      }}
-                    />
+                    <InputNumber min={1} style={{ width: 150 }} />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item
                     label="Weight"
                     name="weight_volume"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Weight is required.",
-                      },
-                    ]}
+                    rules={[{ required: true, message: "Weight is required." }]}
                   >
                     <InputNumber addonAfter={selectAfter} />
                   </Form.Item>
@@ -253,19 +222,14 @@ const Addproduct = () => {
                     label="Ingredients"
                     name="ingredients"
                     rules={[
-                      {
-                        required: true,
-                        message: "Ingredients are required.",
-                      },
+                      { required: true, message: "Ingredients are required." },
                     ]}
                   >
                     <Select
                       mode="multiple"
                       allowClear
                       showSearch
-                      style={{
-                        width: "100%",
-                      }}
+                      style={{ width: "100%" }}
                       placeholder="Please select"
                       options={ingredientsoptions}
                     />
@@ -276,10 +240,7 @@ const Addproduct = () => {
                     name="manufacturer"
                     label="Manufacturer"
                     rules={[
-                      {
-                        required: true,
-                        message: "Manufacturer is required.",
-                      },
+                      { required: true, message: "Manufacturer is required." },
                     ]}
                   >
                     <Select placeholder="--Select--" allowClear>
@@ -292,16 +253,11 @@ const Addproduct = () => {
                   <Form.Item
                     name="status"
                     label="Status"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Status is required.",
-                      },
-                    ]}
+                    rules={[{ required: true, message: "Status is required." }]}
                   >
                     <Select placeholder="--Select--" allowClear>
                       <Option value="Active">Active</Option>
-                      <Option value="Inactive">InActive</Option>
+                      <Option value="Inactive">Inactive</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -309,24 +265,40 @@ const Addproduct = () => {
             </Col>
             <Col span={12}>
               <Dragger {...uploadProps} style={{ height: "200px" }}>
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">
-                  Click or drag file to this area to upload
-                </p>
-                <p className="ant-upload-hint">
-                  Support for a single or bulk upload. Strictly prohibited from
-                  uploading company data or other banned files.
-                </p>
+                {fileList.length > 0 && fileList[0].url ? (
+                  <img
+                    src={fileList[0].url}
+                    alt="Product"
+                    style={{
+                      width: "100%",
+                      height: "200px",
+                      objectFit: "contain",
+                    }}
+                  />
+                ) : (
+                  <>
+                    <p className="ant-upload-drag-icon">
+                      <InboxOutlined />
+                    </p>
+                    <p className="ant-upload-text">
+                      Click or drag file to this area to upload
+                    </p>
+                    <p className="ant-upload-hint">
+                      Support for a single or bulk upload. Strictly prohibited
+                      from uploading company data or other banned files.
+                    </p>
+                  </>
+                )}
               </Dragger>
             </Col>
             <Col span={24}>
               <Space>
                 <Button type="primary" htmlType="submit">
-                  Create
+                  Update
                 </Button>
-                <Button danger>Cancel</Button>
+                <Button danger onClick={() => navigate("/products")}>
+                  Cancel
+                </Button>
               </Space>
             </Col>
           </Row>
@@ -336,4 +308,4 @@ const Addproduct = () => {
   );
 };
 
-export default Addproduct;
+export default UpdateProduct;

@@ -3,6 +3,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import ProductListPage from "./pages/product_list_page";
 import Addproduct from "./pages/addproduct";
+import UpdateProduct from "./pages/updateproduct";
 
 const Product = () => {
   return (
@@ -11,6 +12,7 @@ const Product = () => {
         <Routes basepath="/products">
           <Route path="/*" element={<ProductListPage />} />
           <Route path="/addproduct/*" element={<Addproduct />} />
+          <Route path="/updateproduct/:id" element={<UpdateProduct />} />
         </Routes>
       </Col>
     </Row>
