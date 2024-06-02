@@ -1,7 +1,7 @@
 import { Image, Menu } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import React, { useState } from 'react';
-import {TransactionOutlined,CustomerServiceOutlined,RiseOutlined,SettingOutlined,ProductOutlined,UsergroupAddOutlined,ShoppingCartOutlined,LogoutOutlined} from "@ant-design/icons";
+import {TransactionOutlined,CustomerServiceOutlined,RiseOutlined,SettingOutlined,ProductOutlined,UsergroupAddOutlined,LogoutOutlined} from "@ant-design/icons";
 import "../asset/less/left_menu.less";
 import { useNavigate } from 'react-router-dom';
 const LeftMenu = () => {
@@ -27,38 +27,33 @@ const LeftMenu = () => {
         label: "Products",
         link: "/products",
       },
+  
       {
         key: "2",
-        icon: <ShoppingCartOutlined  style={{ fontSize: "1.4em" }} />,
-        label: "User",
-        link: "",
+        icon: <UsergroupAddOutlined style={{ fontSize: "1.4em" }} />,
+        label: "Customer",
+        link: "/customer",
       },
       {
         key: "3",
-        icon: <UsergroupAddOutlined style={{ fontSize: "1.4em" }} />,
-        label: "Customer",
-        link: "",
-      },
-      {
-        key: "4",
         icon: <TransactionOutlined  style={{ fontSize: "1.4em" }} />,
         label: "Transcation",
         link: "",
       },
       {
-        key: "5",
+        key: "4",
         icon: <SettingOutlined   style={{ fontSize: "1.4em" }} />,
         label: "Settings",
         link: "",
       },
       {
-        key: "6",
+        key: "5",
         icon: <CustomerServiceOutlined  style={{ fontSize: "1.4em" }} />,
         label: "Support",
         link: "",
       },
       {
-        key: "7",
+        key: "6",
         icon: <LogoutOutlined  style={{ fontSize: "1.4em" }} />,
         label: "Logout",
         link: "",

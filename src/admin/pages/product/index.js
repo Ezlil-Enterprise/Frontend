@@ -1,9 +1,9 @@
 import { Col, Row } from "antd";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import ProductListPage from "./pages/product_list_page";
-import Addproduct from "./pages/addproduct";
-import UpdateProduct from "./pages/updateproduct";
+import ProductListPage from "./product_list_page";
+import Addproduct from "./addproduct"
+import UpdateProduct from "./updateproduct";
 
 const Product = () => {
   return (

@@ -74,9 +74,9 @@ const GeneraIndexPage = () => {
           secure: false,
           sameSite: "Lax",
         });
-        dispatch(setUser(userSignUpResponse[0]));
+        dispatch(setUser(userSignUpResponse));
         setIsSignUpModalVisible(false);
-        if (userSignUpResponse[0].user_role === "SuperAdmin")
+        if (userSignUpResponse.user_role === "SuperAdmin")
           navigate("/dashboard");
       } else {
         navigate("/");

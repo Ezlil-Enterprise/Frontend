@@ -15,8 +15,8 @@ import {
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import { InboxOutlined } from "@ant-design/icons";
-import { getProductDetailsByID, updateProductDetails } from "../api/product";
-import "../asset/less/addproduct.less";
+import { getProductDetailsByID, updateProductDetails } from "../../api/product";
+import "../../asset/less/addproduct.less";
 
 const { Option } = Select;
 const { Dragger } = Upload;

@@ -12,8 +12,8 @@ import {
 import Search from "antd/es/transfer/search";
 import React, { useEffect, useState } from "react";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { deleteProductByID, getProductDetails } from "../api/product";
-import { useNavigate } from "react-router-dom";
+import { deleteProductByID, getProductDetails } from "../../api/product"
+import { Form, useNavigate } from "react-router-dom";
 
 const ProductListPage = () => {
   const [productData, setProductData] = useState([]);
