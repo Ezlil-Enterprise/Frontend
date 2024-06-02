@@ -24,7 +24,11 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import "./asset/less/authentication.less";
-import { userSignin, userSignup } from "./api/authentication";
+import {
+  getUserDetailsByEmail,
+  userSignin,
+  userSignup,
+} from "./api/authentication";
 import Cookies from "js-cookie";
 
 const GeneraIndexPage = () => {
@@ -36,12 +40,12 @@ const GeneraIndexPage = () => {
   const userInfo = useSelector((state) => state.user.userInfo);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const user = Cookies.get("user");
-    if (user) {
-      dispatch(setUser(JSON.parse(user)));
-    }
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const userEmail = Cookies.get("user_email");
+  //   if (userEmail) {
+  //     getUserDetailsByEmail(userEmail);
+  //   }
+  // }, [dispatch]);
 
   const handleShowSignUpModal = () => {
     signUpForm.resetFields();
@@ -61,17 +65,21 @@ const GeneraIndexPage = () => {
   const handleSignUp = async () => {
     try {
       const values = await signUpForm.validateFields();
+
       const userSignUpResponse = await userSignup(values);
       if (userSignUpResponse) {
         message.success("Signup successful!");
-        Cookies.set("user", JSON.stringify(userSignUpResponse), {
+        Cookies.set("user_email", userSignUpResponse.email, {
           expires: 7,
           secure: false,
-          sameSite: "Lax", 
+          sameSite: "Lax",
         });
-        dispatch(setUser(userSignUpResponse));
+        dispatch(setUser(userSignUpResponse[0]));
         setIsSignUpModalVisible(false);
-        navigate("/dashboard");
+        if (userSignUpResponse[0].user_role === "SuperAdmin")
+          navigate("/dashboard");
+      } else {
+        navigate("/");
       }
     } catch (error) {
       handleError(error);
@@ -81,17 +89,36 @@ const GeneraIndexPage = () => {
   const handleSignIn = async () => {
     try {
       const values = await signInForm.validateFields();
+      values.user_role = "SuperAdmin";
+      values.status = "Active";
       const userSignInResponse = await userSignin(values);
       if (userSignInResponse) {
         message.success("Signin successful!");
-        Cookies.set("user", JSON.stringify(userSignInResponse), {
+        Cookies.set("user_email", userSignInResponse.data.email, {
           expires: 7,
-          secure: false, 
-          sameSite: "Lax", 
+          secure: false,
+          sameSite: "Lax",
         });
-        dispatch(setUser(userSignInResponse));
+
+        const userEmail = userSignInResponse.data.email;
+
+        const userDetailsResponse = await getUserDetailsByEmail(userEmail);
+
+        if (userDetailsResponse) {
+          dispatch(setUser(userDetailsResponse));
+        } else {
+          console.warn(
+            "Error fetching detailed user data. User information might be incomplete."
+          );
+        }
+
         setIsSignInModalVisible(false);
-        navigate("/dashboard");
+
+        if (userDetailsResponse.user_role === "SuperAdmin") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
       }
     } catch (error) {
       handleError(error);

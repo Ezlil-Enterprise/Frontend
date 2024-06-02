@@ -23,3 +23,16 @@ export const userSignin = async (formData) => {
     throw error;
   }
 };
+
+export const getUserDetailsByEmail = async (userEmail) => {
+  
+  try {
+    const response = await axios.get(
+      `http://localhost:4001/api/customers/email/${userEmail}`
+    );
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+    throw error; 
+  }
+};

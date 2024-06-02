@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout, Row, Col, Avatar, Input, Space } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser, logout } from "../../store/reducers/user";
@@ -11,38 +11,38 @@ import {
 import LeftMenu from "./left_menu";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-
+import { getUserDetailsByEmail } from "../api/authentication.js";
 const { Header, Content } = Layout;
 
 const MainLayout = ({ children }) => {
-  const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.user.userInfo);
+  // const dispatch = useDispatch();
+  // const userInfo = useSelector((state) => state.user.userInfo);
+  const [userInfo, setUserInfo] = useState({});
+
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = Cookies.get("user");
-    if (user) {
-      dispatch(setUser(JSON.parse(user)));
-    } else {
-      if (location.pathname !== "/") {
-        navigate("/");
-      }
+    const userEmail = Cookies.get("user_email");
+
+    if (userEmail) {
+      (async () => {
+        const userInfoResponse = await getUserDetailsByEmail(userEmail);
+        console.log("User Details:", userInfoResponse); // Access user data properties directly
+        setUserInfo(userInfoResponse);
+      })();
     }
-    if (location.pathname === "/") {
-      dispatch(logout());
-    }
-  }, [dispatch, location.pathname, navigate]);
+  }, [location.pathname]);
 
   const handleLogout = () => {
-    Cookies.remove("user");
-    dispatch(logout());
+    Cookies.remove("user_email");
+    setUserInfo(null);
     navigate("/");
   };
 
   return (
     <>
-      {userInfo?.email === "adm@gmail.com" ? (
+      {userInfo?.user_role === "SuperAdmin" ? (
         <Layout className="main-layout">
           <LeftMenu />
           <Layout className="main-right">
