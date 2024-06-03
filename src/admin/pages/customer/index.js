@@ -2,18 +2,19 @@ import { Col, Row } from "antd";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
-// import Addproduct from "./pages/addproduct";
-// import UpdateProduct from "./pages/updateproduct";
+
 import CustomerListPage from "./customerlist";
+import Addcustomer from "./addcustomer";
+import UpdateCustomer from "./updatecustomer";
 
 const Customer = () => {
   return (
     <Row gutter={[64, 64]} style={{ height: "100vh" }}>
       <Col span={24}>
-        <Routes basepath="/customer">
+        <Routes basepath="/customers">
           <Route path="/*" element={<CustomerListPage/>} />
-          {/* <Route path="/addcustomer/*" element={<Addproduct />} />
-          <Route path="/updatecustomer/:id" element={<UpdateProduct />} /> */}
+          <Route path="/addcustomer/*" element={<Addcustomer />} />
+          <Route path="/updatecustomer/:id" element={<UpdateCustomer/>} />
         </Routes>
       </Col>
     </Row>

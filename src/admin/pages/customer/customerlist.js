@@ -40,16 +40,12 @@ const CustomerListPage = () => {
       title: "Name",
       dataIndex: "name",
       render: (text, record) => (
-        <a onClick={() => handleUpdateProduct(record)}>{text}</a>
+        <a onClick={() => handleUpdateCustomer(record)}>{text}</a>
       ),
     },
     {
       title: "Email",
       dataIndex: "email",
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
     },
     {
       title: "User Role",
@@ -83,12 +79,12 @@ const CustomerListPage = () => {
       ),
     },
   ];
-//   const handleAddCustomers = () => {
-//     navigate("/customers/addcustomer");
-//   };
-//   const handleUpdateCustomer = (record) => {
-//     navigate(`/customers/updatecustomer/${record._id}`);
-//   };
+  const handleAddCustomers = () => {
+    navigate("/customers/addcustomer");
+  };
+  const handleUpdateCustomer = (record) => {
+    navigate(`/customers/updatecustomer/${record._id}`);
+  };
   const handleDeleteCustomer = async (id) => {
     try {
       await deleteCustomerByID(id);
@@ -149,7 +145,7 @@ const CustomerListPage = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-            //   onClick={handleAddCustomers}
+              onClick={handleAddCustomers}
             >
               Add customers
             </Button>

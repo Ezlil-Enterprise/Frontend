@@ -14,7 +14,7 @@ const App = () => {
           <Route path="/*" element={<GeneraIndexPage />} />
           <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="/products/*" element={<Product />} />
-          <Route path="/customer/*" element={<Customer />} />
+          <Route path="/customers/*" element={<Customer />} />
         </Routes>
       </MainLayout>
     </BrowserRouter>
