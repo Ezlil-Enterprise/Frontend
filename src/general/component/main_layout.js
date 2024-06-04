@@ -15,71 +15,74 @@ import { getUserDetailsByEmail } from "../api/authentication.js";
 const { Header, Content } = Layout;
 
 const MainLayout = ({ children }) => {
-  // const dispatch = useDispatch();
-  // const userInfo = useSelector((state) => state.user.userInfo);
-  const [userInfo, setUserInfo] = useState({});
+  const dispatch = useDispatch();
+  const userDetails = useSelector((state) => state.user.userInfo);
+  const [userEmail, setUserEmail] = useState(Cookies.get("user_email"));
 
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userEmail = Cookies.get("user_email");
-
-    if (userEmail) {
-      (async () => {
+    const fetchUserInfo = async () => {
+      if (userEmail) {
         const userInfoResponse = await getUserDetailsByEmail(userEmail);
-        console.log("User Details:", userInfoResponse); // Access user data properties directly
-        setUserInfo(userInfoResponse);
-      })();
-    }
-  }, [location.pathname]);
+        dispatch(setUser(userInfoResponse));
+      }
+    };
+
+    fetchUserInfo();
+  }, [location.pathname, userEmail]);
 
   const handleLogout = () => {
     Cookies.remove("user_email");
-    setUserInfo(null);
+    setUserEmail(null);
+    dispatch(logout());
     navigate("/");
   };
 
   return (
-    <>
-      {userInfo?.user_role === "SuperAdmin" ? (
-        <Layout className="main-layout">
-          <LeftMenu />
-          <Layout className="main-right">
-            <Header style={{ backgroundColor: "#ffffff", zIndex: 999 }}>
-              <Row align="middle">
-                <Col span={8}>
-                  <Input placeholder="Search" prefix={<SearchOutlined />} />
-                </Col>
-                <Col span={16}>
-                  <Space
-                    size="large"
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      alignItems: "center",
-                    }}
-                  >
-                    <MoonOutlined />
-                    <BellOutlined />
-                    <LogoutOutlined onClick={handleLogout} />
-                    <Avatar src="./images/user.jpg" />
-                  </Space>
-                </Col>
-              </Row>
-            </Header>
-            <div className="content-wrapper">
+  
+    
+        <>
+          {userDetails?.user_role === "SuperAdmin" ? (
+            <Layout className="main-layout">
+              <LeftMenu />
+              <Layout className="main-right">
+                <Header style={{ backgroundColor: "#ffffff", zIndex: 999 }}>
+                  <Row align="middle">
+                    <Col span={8}>
+                      <Input placeholder="Search" prefix={<SearchOutlined />} />
+                    </Col>
+                    <Col span={16}>
+                      <Space
+                        size="large"
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          alignItems: "center",
+                        }}
+                      >
+                        <MoonOutlined />
+                        <BellOutlined />
+                        <LogoutOutlined onClick={handleLogout} />
+                        <Avatar src="./images/user.jpg" />
+                      </Space>
+                    </Col>
+                  </Row>
+                </Header>
+                <div className="content-wrapper">
+                  <Content className="content">{children}</Content>
+                </div>
+              </Layout>
+            </Layout>
+          ) : (
+            <Layout>
               <Content className="content">{children}</Content>
-            </div>
-          </Layout>
-        </Layout>
-      ) : (
-        <Layout>
-          <Content className="content">{children}</Content>
-        </Layout>
-      )}
-    </>
-  );
-};
+            </Layout>
+          )}
+        </>
+      )};
+
+
 
 export default MainLayout;

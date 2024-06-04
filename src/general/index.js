@@ -4,6 +4,7 @@ import {
   Button,
   Col,
   Dropdown,
+  Flex,
   Form,
   Image,
   Input,
@@ -11,17 +12,22 @@ import {
   Menu,
   Modal,
   Row,
+  Space,
   Typography,
   message,
 } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, logout } from "../store/reducers/user";
-import { useNavigate } from "react-router-dom";
+import { logout } from "../store/reducers/user";
+import { Link, useNavigate } from "react-router-dom";
 import {
   SearchOutlined,
   ShoppingCartOutlined,
   UserOutlined,
+  OrderedListOutlined,
+  RightOutlined,
+  LogoutOutlined,
+  TagOutlined
 } from "@ant-design/icons";
 import "./asset/less/authentication.less";
 import {
@@ -39,13 +45,6 @@ const GeneraIndexPage = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user.userInfo);
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const userEmail = Cookies.get("user_email");
-  //   if (userEmail) {
-  //     getUserDetailsByEmail(userEmail);
-  //   }
-  // }, [dispatch]);
 
   const handleShowSignUpModal = () => {
     signUpForm.resetFields();
@@ -74,7 +73,7 @@ const GeneraIndexPage = () => {
           secure: false,
           sameSite: "Lax",
         });
-        dispatch(setUser(userSignUpResponse));
+
         setIsSignUpModalVisible(false);
         if (userSignUpResponse.user_role === "SuperAdmin")
           navigate("/dashboard");
@@ -104,14 +103,6 @@ const GeneraIndexPage = () => {
 
         const userDetailsResponse = await getUserDetailsByEmail(userEmail);
 
-        if (userDetailsResponse) {
-          dispatch(setUser(userDetailsResponse));
-        } else {
-          console.warn(
-            "Error fetching detailed user data. User information might be incomplete."
-          );
-        }
-
         setIsSignInModalVisible(false);
 
         if (userDetailsResponse.user_role === "SuperAdmin") {
@@ -140,7 +131,7 @@ const GeneraIndexPage = () => {
   };
 
   const handleLogout = () => {
-    Cookies.remove("user");
+    Cookies.remove("user_email");
     dispatch(logout());
     navigate("/");
   };
@@ -157,27 +148,32 @@ const GeneraIndexPage = () => {
       style={{
         backgroundColor: "#f5f5f5",
         width: "280px",
-        padding: "10px",
-        borderRadius: "20px",
+        padding: "20px",
+        borderRadius: "15px",
       }}
       align="middle"
       justify="center"
-    >
+      gutter={[16,16]}
+>
       <Col span={5}>
         <Avatar size="large" icon={<UserOutlined />} />
       </Col>
       <Col span={19}>
         <Row>
           <Col span={24}>
-            <Typography>Welcome to Ezlil</Typography>
-          </Col>
-          <Col span={24}>
             {userInfo ? (
-              <Button type="link" onClick={handleLogout}>
-                Logout
-              </Button>
+              <>
+                <Flex vertical justify="right" align="start">
+                  {" "}
+                  <Typography>Welcome {userInfo.name}</Typography>
+                  <Link onClick={handleLogout}>
+                    Logout
+                  </Link>
+                </Flex>
+              </>
             ) : (
               <>
+                <Typography>Welcome to Ezlil</Typography>
                 <Button type="link" onClick={handleShowSignInModal}>
                   Sign in
                 </Button>
@@ -188,6 +184,30 @@ const GeneraIndexPage = () => {
             )}
           </Col>
         </Row>
+      </Col>
+      <Col span={24}>
+        <Flex justify='space-between'>
+          <Typography><Space><OrderedListOutlined  />Orders</Space></Typography>
+          <Typography><RightOutlined /></Typography>
+        </Flex>
+      </Col>
+      <Col span={24}>
+        <Flex justify='space-between'>
+          <Typography><Space><UserOutlined  />Account</Space></Typography>
+          <Typography><RightOutlined /></Typography>
+        </Flex>
+      </Col>
+      <Col span={24}>
+        <Flex justify='space-between'>
+          <Typography><Space><TagOutlined />Copoun</Space></Typography>
+          <Typography><RightOutlined /></Typography>
+        </Flex>
+      </Col>
+      <Col span={24}>
+        <Flex justify='space-between'>
+          <Typography><Space><LogoutOutlined  />Logout</Space></Typography>
+          <Typography><RightOutlined /></Typography>
+        </Flex>
       </Col>
     </Row>
   );
@@ -221,13 +241,13 @@ const GeneraIndexPage = () => {
                 style={{ display: "flex", justifyContent: "flex-end" }}
               >
                 <SearchOutlined
-                  style={{ fontSize: "18px", marginRight: "20px" }}
+                  style={{ fontSize: "1.4em", marginRight: "20px" }}
                 />
                 <ShoppingCartOutlined
-                  style={{ fontSize: "18px", marginRight: "20px" }}
+                  style={{ fontSize: "1.4em", marginRight: "20px" }}
                 />
                 <Dropdown overlay={userMenu}>
-                  <UserOutlined style={{ fontSize: "18px" }} />
+                  <UserOutlined style={{ fontSize: "1.4em" }} />
                 </Dropdown>
               </Col>
             </Row>
