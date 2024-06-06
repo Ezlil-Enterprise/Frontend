@@ -36,6 +36,7 @@ import {
   userSignup,
 } from "./api/authentication";
 import Cookies from "js-cookie";
+import Home from "./pages/home";
 
 const GeneraIndexPage = () => {
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
@@ -255,7 +256,7 @@ const GeneraIndexPage = () => {
           <Content>
             <Row>
               <Col span={24}>
-                {/* Access userInfo from useSelector here to display data conditionally */}
+              <Home/>
               </Col>
             </Row>
           </Content>
