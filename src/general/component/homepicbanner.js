@@ -1,8 +1,8 @@
 import React from "react";
 import { Col, Row, Space, Typography } from "antd";
 import Land from "../asset/image/landing.jpg";
-import "../asset/css/typography-ls.less";
-import "../asset/css/global.less";
+import "../asset/less/typography-ls.less";
+import "../asset/css/global.css";
 const Homepicbanner = () => {
   return (
     <Row style={{ height: "90vh" }}>

@@ -1,17 +1,24 @@
 import React, { useEffect } from "react";
-import { Col, Flex, Row, Tabs, Typography } from "antd";
+import { Col, Flex, Row, Space, Tabs, Typography, Image, Card } from "antd";
 import Homepicbanner from "../component/homepicbanner";
 import Soapboard from "../asset/image/board1.jpg";
 import FaceSerumboard from "../asset/image/board2.jpg";
 import FaceWashboard from "../asset/image/board3.jpg";
-import "../asset/css/home.less";
-import "../asset/css/typography-ls.less";
-import "../asset/css/typography-ns.less";
+import "../asset/less/home.less";
+import "../asset/less/typography-ls.less";
+import "../asset/less/typography-ns.less";
+import Prhelpdesk from "../asset/image/contact_us.svg";
+import Messageinfo from "../asset/image/messageinfo.svg";
 import AOS from "aos";
 import "aos/dist/aos.css";
-
+import { MB10, MB100, MB20, MB30 } from "../component/widget";
 import { RightOutlined } from "@ant-design/icons";
 import Displaysoapcard from "../component/card/displaysoapcard";
+import Displayserumcard from "../component/card/displayserumcard";
+import Displayfacewashcard from "../component/card/displayfacewashcard";
+
+import Link from "antd/es/typography/Link";
+import Footercomponent from "../component/card/footer";
 const Home = () => {
   useEffect(() => {
     AOS.init({});
@@ -20,17 +27,17 @@ const Home = () => {
     {
       key: "soap",
       label: "Soap",
-      children: (<Displaysoapcard/>),
+      children: <Displaysoapcard />,
     },
     {
       key: "face_serum",
       label: "Face Serum",
-      children: "Content of Tab Pane 3",
+      children: <Displayserumcard />,
     },
     {
       key: "face_wash",
       label: "Face Wash",
-      children: "Content of Tab wash",
+      children: <Displayfacewashcard />,
     },
     {
       key: "face_mask",
@@ -148,6 +155,100 @@ const Home = () => {
       <Col span={24} align="center" className="container">
         <Typography className="ez-ls-h2 bold">This Week’s Hot Picks</Typography>
         <Tabs defaultActiveKey="soap" items={tabitems} />
+      </Col>
+      <Col span={24} align="center">
+        {" "}
+        <Link to="/">
+          <Space align="center">
+            <Typography className="ez-ls-h6 underline primary">
+              view all{" "}
+            </Typography>
+            <RightOutlined className="arrow-icon primary" />
+          </Space>
+        </Link>
+      </Col>
+
+      <Col span={24} className="container">
+        <Typography className="ez-ls-h2 bold" style={{ textAlign: "center" }}>
+          Support
+        </Typography>
+        <MB20 />
+        <Row gutter={[32, 32]}>
+          <Col span={12}>
+            <Card
+              style={{
+                padding: "20px",
+                borderRadius: "12px",
+                height: "310px",
+              }}
+            >
+              {" "}
+              <Row>
+                <Col span={12}>
+                  <Flex vertical>
+                    <Typography className="ez-ls-h5 gray">
+                      One-on-One with Ezlil
+                    </Typography>
+                    <Typography className="ez-ls-h3 bold black">
+                      Your personal helpdesk
+                    </Typography>
+                    <MB20 />
+                    <Typography>
+                      At Ezlil, we prioritize your experience with friendly
+                      support, making your shopping experience personal.
+                    </Typography>
+                    <MB10 />
+                    <Typography className="ez-ls-h6 black underline">
+                      Let's chat
+                    </Typography>
+                  </Flex>
+                </Col>
+                <Col span={12}>
+                  <Image src={Messageinfo} preview={false} />
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card
+              style={{
+                padding: "20px",
+                borderRadius: "12px",
+                height: "310px",
+              }}
+            >
+              {" "}
+              <Row>
+                <Col span={12}>
+                  <Flex vertical>
+                    <Typography className="ez-ls-h5 gray">
+                      Ezlil Care
+                    </Typography>
+                    <Typography className="ez-ls-h3 bold black">
+                      Our Support team is here to help
+                    </Typography>
+                    <MB20 />
+                    <Typography>
+                      The best option depends on what aspect you want to
+                      emphasize: Ezlil's role, the benefits of franchising, or a
+                      call to action.
+                    </Typography>
+                    <MB10 />
+                    <Typography className="ez-ls-h6 black underline">
+                      Explore more
+                    </Typography>
+                  </Flex>
+                </Col>
+                <Col span={12}>
+                  <Image src={Prhelpdesk} preview={false} />
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+        </Row>
+      </Col>
+      <Col span={24}>
+      <Footercomponent/>
       </Col>
     </Row>
   );

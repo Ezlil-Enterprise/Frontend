@@ -1,0 +1,30 @@
+.home-landing-banner {
+  background-size: cover;
+  background-position: center;
+  align-items: flex-end;
+  padding: 80px;
+  display: flex;
+}
+.container {
+  padding: 60px;
+}
+.arrow-icon {
+  height: 14px;
+  width: 14px;
+}
+.mb-100 {
+  margin-bottom: 100px;
+}
+
+.mb-30 {
+  margin-bottom: 30px;
+}
+.mb-20 {
+  margin-bottom: 20px;
+}
+.mb-10 {
+  margin-bottom: 10px;
+}
+.mb-5 {
+  margin-bottom: 5px;
+}

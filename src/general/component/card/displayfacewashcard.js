@@ -5,7 +5,7 @@ import product1 from "../../asset/image/product.jpg";
 import "../../asset/less/typography-ls.less";
 import "../../asset/less/card.less";
 import Link from "antd/es/typography/Link";
-const Displaysoapcard = () => {
+const Displayfacewashcard = () => {
   return (
     <Row gutter={[16,16]}>
       <Col span={6} xs={24} sm={24} md={12} lg={6} xl={6}>
@@ -23,7 +23,7 @@ const Displaysoapcard = () => {
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
               <Typography className="ez-ls-h4 black">
-                Rose Petal Soap
+                Rose Petal face wash
               </Typography>
 
               <Typography className="ez-ls-h6 black">Rs.160</Typography>
@@ -61,7 +61,7 @@ const Displaysoapcard = () => {
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
               <Typography className="ez-ls-h4 black">
-                Rose Petal Soap
+                Rose Petal face wash
               </Typography>
 
               <Typography className="ez-ls-h6 black">Rs.160</Typography>
@@ -99,7 +99,7 @@ const Displaysoapcard = () => {
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
               <Typography className="ez-ls-h4 black">
-                Rose Petal Soap
+                Rose Petal face wash
               </Typography>
 
               <Typography className="ez-ls-h6 black">Rs.160</Typography>
@@ -137,7 +137,7 @@ const Displaysoapcard = () => {
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
               <Typography className="ez-ls-h4 black">
-                Rose Petal Soap
+                Rose Petal face wash
               </Typography>
 
               <Typography className="ez-ls-h6 black">Rs.160</Typography>
@@ -164,4 +164,4 @@ const Displaysoapcard = () => {
   );
 };
 
-export default Displaysoapcard;
+export default Displayfacewashcard;
