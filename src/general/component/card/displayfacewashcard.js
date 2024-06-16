@@ -4,10 +4,10 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import product1 from "../../asset/image/product.jpg";
 import "../../asset/less/typography-ls.less";
 import "../../asset/less/card.less";
-import Link from "antd/es/typography/Link";
+import { Link } from "react-router-dom";
 const Displayfacewashcard = () => {
   return (
-    <Row gutter={[16,16]}>
+    <Row gutter={[16, 16]}>
       <Col span={6} xs={24} sm={24} md={12} lg={6} xl={6}>
         <Card className="product-card">
           <Row>
@@ -36,7 +36,7 @@ const Displayfacewashcard = () => {
               <Typography className="ez-ls-h6 red">Up to 10% OFF</Typography>
             </Col>
             <Col span={24} align="start" style={{ padding: "0 20px" }}>
-              <Link to="/">
+              <Link to="/productdetails">
                 <Space align="center">
                   <Typography className="ez-ls-h6 primary">Buy now </Typography>
                   <ArrowRightOutlined className="arrow-icon primary" />
@@ -74,7 +74,7 @@ const Displayfacewashcard = () => {
               <Typography className="ez-ls-h6 red">Up to 10% OFF</Typography>
             </Col>
             <Col span={24} align="start" style={{ padding: "0 20px" }}>
-              <Link to="/">
+              <Link to="/productdetails">
                 <Space align="center">
                   <Typography className="ez-ls-h6 primary">Buy now </Typography>
                   <ArrowRightOutlined className="arrow-icon primary" />

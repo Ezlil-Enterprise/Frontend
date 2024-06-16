@@ -19,7 +19,7 @@ import {
 import { Content, Header } from "antd/es/layout/layout";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/reducers/user";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Route, Routes } from "react-router-dom";
 import {
   SearchOutlined,
   ShoppingCartOutlined,
@@ -27,7 +27,7 @@ import {
   OrderedListOutlined,
   RightOutlined,
   LogoutOutlined,
-  TagOutlined
+  TagOutlined,
 } from "@ant-design/icons";
 import "./asset/less/authentication.less";
 import {
@@ -37,6 +37,11 @@ import {
 } from "./api/authentication";
 import Cookies from "js-cookie";
 import Home from "./pages/home";
+import HomeLanding from "./pages/home";
+import Orders from "./pages/orders";
+import Soaps from "./pages/products/soaps";
+import Facewash from "./pages/products/facewash";
+import Productdisplay from "./component/productdisplay";
 
 const GeneraIndexPage = () => {
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
@@ -136,11 +141,13 @@ const GeneraIndexPage = () => {
     dispatch(logout());
     navigate("/");
   };
-
+  const handleOrdersClick = () => {
+    window.location.href = "/orders";
+  };
   const menuitems = [
-    { key: "home", label: "Home" },
-    { key: "face-wash", label: "Face Wash" },
-    { key: "soap", label: "Soap" },
+    { key: "home", label: <Link to="/">Home</Link> },
+    { key: "face-wash", label: <Link to="/facewash">Face Wash</Link> },
+    { key: "soap", label: <Link to="/soaps">Soap</Link> },
     { key: "face-mask", label: "Face Mask" },
   ];
 
@@ -154,8 +161,8 @@ const GeneraIndexPage = () => {
       }}
       align="middle"
       justify="center"
-      gutter={[16,16]}
->
+      gutter={[16, 16]}
+    >
       <Col span={5}>
         <Avatar size="large" icon={<UserOutlined />} />
       </Col>
@@ -167,9 +174,7 @@ const GeneraIndexPage = () => {
                 <Flex vertical justify="right" align="start">
                   {" "}
                   <Typography>Welcome {userInfo.name}</Typography>
-                  <Link onClick={handleLogout}>
-                    Logout
-                  </Link>
+                  <Link onClick={handleLogout}>Logout</Link>
                 </Flex>
               </>
             ) : (
@@ -186,28 +191,56 @@ const GeneraIndexPage = () => {
           </Col>
         </Row>
       </Col>
-      <Col span={24}>
-        <Flex justify='space-between'>
-          <Typography><Space><OrderedListOutlined  />Orders</Space></Typography>
-          <Typography><RightOutlined /></Typography>
+      <Col span={24} onClick={handleOrdersClick}>
+        <Flex justify="space-between">
+          <Typography>
+            <Space>
+              <OrderedListOutlined />
+              Orders
+            </Space>
+          </Typography>
+          <Typography>
+            <RightOutlined />
+          </Typography>
         </Flex>
       </Col>
       <Col span={24}>
-        <Flex justify='space-between'>
-          <Typography><Space><UserOutlined  />Account</Space></Typography>
-          <Typography><RightOutlined /></Typography>
+        <Flex justify="space-between">
+          <Typography>
+            <Space>
+              <UserOutlined />
+              Account
+            </Space>
+          </Typography>
+          <Typography>
+            <RightOutlined />
+          </Typography>
         </Flex>
       </Col>
       <Col span={24}>
-        <Flex justify='space-between'>
-          <Typography><Space><TagOutlined />Copoun</Space></Typography>
-          <Typography><RightOutlined /></Typography>
+        <Flex justify="space-between">
+          <Typography>
+            <Space>
+              <TagOutlined />
+              Copoun
+            </Space>
+          </Typography>
+          <Typography>
+            <RightOutlined />
+          </Typography>
         </Flex>
       </Col>
       <Col span={24}>
-        <Flex justify='space-between'>
-          <Typography><Space><LogoutOutlined  />Logout</Space></Typography>
-          <Typography><RightOutlined /></Typography>
+        <Flex justify="space-between">
+          <Typography>
+            <Space>
+              <LogoutOutlined />
+              Logout
+            </Space>
+          </Typography>
+          <Typography>
+            <RightOutlined />
+          </Typography>
         </Flex>
       </Col>
     </Row>
@@ -256,7 +289,13 @@ const GeneraIndexPage = () => {
           <Content>
             <Row>
               <Col span={24}>
-              <Home/>
+                <Routes basepath="/">
+                  <Route path="/*" element={<HomeLanding />} />
+                  <Route path="/orders/*" element={<Orders />} />
+                  <Route path="/soaps/*" element={<Soaps />} />
+                  <Route path="/facewash" element={<Facewash />} />
+                  <Route path="/productdetails" element={<Productdisplay />} />
+                </Routes>
               </Col>
             </Row>
           </Content>

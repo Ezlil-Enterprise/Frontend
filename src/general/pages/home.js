@@ -19,7 +19,7 @@ import Displayfacewashcard from "../component/card/displayfacewashcard";
 
 import Link from "antd/es/typography/Link";
 import Footercomponent from "../component/card/footer";
-const Home = () => {
+const HomeLanding = () => {
   useEffect(() => {
     AOS.init({});
   }, []);
@@ -248,10 +248,10 @@ const Home = () => {
         </Row>
       </Col>
       <Col span={24}>
-      <Footercomponent/>
+        <Footercomponent />
       </Col>
     </Row>
   );
 };
 
-export default Home;
+export default HomeLanding;
