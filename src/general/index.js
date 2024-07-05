@@ -31,6 +31,7 @@ import {
 } from "@ant-design/icons";
 import "./asset/less/authentication.less";
 import {
+  getUserDetails,
   getUserDetailsByEmail,
   userSignin,
   userSignup,
@@ -74,15 +75,14 @@ const GeneraIndexPage = () => {
       const userSignUpResponse = await userSignup(values);
       if (userSignUpResponse) {
         message.success("Signup successful!");
-        Cookies.set("user_email", userSignUpResponse.email, {
+        Cookies.set("user_token", userSignUpResponse.email, {
           expires: 7,
           secure: false,
           sameSite: "Lax",
         });
 
         setIsSignUpModalVisible(false);
-        if (userSignUpResponse.user_role === "SuperAdmin")
-          navigate("/dashboard");
+        if (userSignUpResponse.role === "SuperAdmin") navigate("/dashboard");
       } else {
         navigate("/");
       }
@@ -94,28 +94,25 @@ const GeneraIndexPage = () => {
   const handleSignIn = async () => {
     try {
       const values = await signInForm.validateFields();
-      values.user_role = "SuperAdmin";
-      values.status = "Active";
       const userSignInResponse = await userSignin(values);
+      console.log(userSignInResponse);
       if (userSignInResponse) {
         message.success("Signin successful!");
-        Cookies.set("user_email", userSignInResponse.data.email, {
+        if (userSignInResponse.role === "SuperAdmin") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
+        Cookies.set("user_token", userSignInResponse.data.jwt, {
           expires: 7,
           secure: false,
           sameSite: "Lax",
         });
 
-        const userEmail = userSignInResponse.data.email;
-
-        const userDetailsResponse = await getUserDetailsByEmail(userEmail);
+        const userToken = userSignInResponse.data.jwt;
+        const userDetailsResponse = await getUserDetails(userToken);
 
         setIsSignInModalVisible(false);
-
-        if (userDetailsResponse.user_role === "SuperAdmin") {
-          navigate("/dashboard");
-        } else {
-          navigate("/");
-        }
       }
     } catch (error) {
       handleError(error);
@@ -173,7 +170,7 @@ const GeneraIndexPage = () => {
               <>
                 <Flex vertical justify="right" align="start">
                   {" "}
-                  <Typography>Welcome {userInfo.name}</Typography>
+                  <Typography>Welcome {userInfo.firstName}</Typography>
                   <Link onClick={handleLogout}>Logout</Link>
                 </Flex>
               </>
@@ -293,7 +290,7 @@ const GeneraIndexPage = () => {
                   <Route path="/*" element={<HomeLanding />} />
                   <Route path="/orders/*" element={<Orders />} />
                   <Route path="/soaps/*" element={<Soaps />} />
-                  <Route path="/facewash" element={<Facewash />} />
+                  <Route path="/facewash/*" element={<Facewash />} />
                   <Route path="/productdetails" element={<Productdisplay />} />
                 </Routes>
               </Col>
@@ -315,7 +312,18 @@ const GeneraIndexPage = () => {
         >
           <Typography.Title level={4}>Sign up/Create Account</Typography.Title>
           <Form.Item
-            name="name"
+            name="firstName"
+            rules={[{ required: true, message: "Please input your username!" }]}
+          >
+            <Input
+              id="usernameInput"
+              placeholder="Username"
+              size="large"
+              style={{ borderRadius: "15px" }}
+            />
+          </Form.Item>
+          <Form.Item
+            name="lastName"
             rules={[{ required: true, message: "Please input your username!" }]}
           >
             <Input
@@ -337,7 +345,7 @@ const GeneraIndexPage = () => {
             />
           </Form.Item>
           <Form.Item
-            name="phone"
+            name="mobile"
             rules={[
               { required: true, message: "Please input your phone number!" },
             ]}

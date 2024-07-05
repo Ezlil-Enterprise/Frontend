@@ -32,7 +32,7 @@ const LeftMenu = () => {
         key: "2",
         icon: <UsergroupAddOutlined style={{ fontSize: "1.4em" }} />,
         label: "Customer",
-        link: "/customer",
+        link: "/customers",
       },
       {
         key: "3",

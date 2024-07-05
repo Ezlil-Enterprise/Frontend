@@ -2,10 +2,9 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import GeneraIndexPage from "./general";
 import MainLayout from "./general/component/main_layout";
-import Dashboard from "./general/pages/dashboard";
 import Product from "./admin/pages/product/index";
 import Customer from "./admin/pages/customer/index";
-
+import Dashboard from "./admin/pages/dashboard/index"
 const App = () => {
   return (
     <BrowserRouter>

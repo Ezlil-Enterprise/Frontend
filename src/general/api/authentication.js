@@ -2,7 +2,7 @@ const axios = require("axios");
 export const userSignup = async (formData) => {
   try {
     const response = await axios.post(
-      " http://localhost:4001/api/user/signup",
+      " http://localhost:4001/auth/signup",
       formData
     );
     return response;
@@ -14,7 +14,7 @@ export const userSignup = async (formData) => {
 export const userSignin = async (formData) => {
   try {
     const response = await axios.post(
-      " http://localhost:4001/api/user/login",
+      " http://localhost:4001/auth/signin",
       formData
     );
     return response;
@@ -24,12 +24,19 @@ export const userSignin = async (formData) => {
   }
 };
 
-export const getUserDetailsByEmail = async (userEmail) => {
+export const getUserDetails = async (token) => {
   
   try {
-    const response = await axios.get(
-      `http://localhost:4001/api/customers/email/${userEmail}`
-    );
+    // const response = await axios.get(
+    //   `http://localhost:4001/api/users/profile/${userEmail}`
+    // );
+
+    const response = await axios.get('http://localhost:4001/api/users/profile', {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
     return response.data; 
   } catch (error) {
     console.error("Error fetching user details:", error);
