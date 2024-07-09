@@ -7,7 +7,7 @@ import "../../asset/less/card.less";
 import Link from "antd/es/typography/Link";
 const Displaysoapcard = () => {
   return (
-    <Row gutter={[16,16]}>
+    <Row gutter={[16, 16]}>
       <Col span={6} xs={24} sm={24} md={12} lg={6} xl={6}>
         <Card className="product-card">
           <Row>
@@ -22,11 +22,11 @@ const Displaysoapcard = () => {
               align="start"
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
-              <Typography className="ez-ls-h4 black">
+              <Typography className="ez-ls-h4 black-green">
                 Rose Petal Soap
               </Typography>
 
-              <Typography className="ez-ls-h6 black">Rs.160</Typography>
+              <Typography className="ez-ls-h6 black-green">Rs.160</Typography>
             </Col>
             <Col
               span={24}
@@ -60,11 +60,11 @@ const Displaysoapcard = () => {
               align="start"
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
-              <Typography className="ez-ls-h4 black">
+              <Typography className="ez-ls-h4 black-green">
                 Rose Petal Soap
               </Typography>
 
-              <Typography className="ez-ls-h6 black">Rs.160</Typography>
+              <Typography className="ez-ls-h6 black-green">Rs.160</Typography>
             </Col>
             <Col
               span={24}
@@ -98,11 +98,11 @@ const Displaysoapcard = () => {
               align="start"
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
-              <Typography className="ez-ls-h4 black">
+              <Typography className="ez-ls-h4 black-green">
                 Rose Petal Soap
               </Typography>
 
-              <Typography className="ez-ls-h6 black">Rs.160</Typography>
+              <Typography className="ez-ls-h6 black-green">Rs.160</Typography>
             </Col>
             <Col
               span={24}
@@ -136,11 +136,11 @@ const Displaysoapcard = () => {
               align="start"
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
-              <Typography className="ez-ls-h4 black">
+              <Typography className="ez-ls-h4 black-green">
                 Rose Petal Soap
               </Typography>
 
-              <Typography className="ez-ls-h6 black">Rs.160</Typography>
+              <Typography className="ez-ls-h6 black-green">Rs.160</Typography>
             </Col>
             <Col
               span={24}

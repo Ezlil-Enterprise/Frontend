@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Flex, Row, Space, Tabs, Typography, Image, Card } from "antd";
 import Homepicbanner from "../component/homepicbanner";
 import Soapboard from "../asset/image/board1.jpg";
@@ -19,10 +19,23 @@ import Displayfacewashcard from "../component/card/displayfacewashcard";
 
 import Link from "antd/es/typography/Link";
 import Footercomponent from "../component/card/footer";
+import { getAllProductDetails } from "../api/product";
 const HomeLanding = () => {
+  const [productData, setProductData] = useState([]);
   useEffect(() => {
     AOS.init({});
+    const fetchProductData = async () => {
+      try {
+        const response = await getAllProductDetails();
+        console.log("Fetched Product Data:", response);
+        setProductData(response);
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      }
+    };
+    fetchProductData();
   }, []);
+
   const tabitems = [
     {
       key: "soap",
@@ -51,7 +64,7 @@ const HomeLanding = () => {
         <Homepicbanner />
       </Col>
       <Col span={12} className="container">
-        <Typography className="ez-ls-h1 black">
+        <Typography className="ez-ls-h1 black-green">
           Explore the Ezlil collection
         </Typography>
       </Col>
@@ -189,7 +202,7 @@ const HomeLanding = () => {
                     <Typography className="ez-ls-h5 gray">
                       One-on-One with Ezlil
                     </Typography>
-                    <Typography className="ez-ls-h3 bold black">
+                    <Typography className="ez-ls-h3 bold black-green">
                       Your personal helpdesk
                     </Typography>
                     <MB20 />
@@ -198,7 +211,7 @@ const HomeLanding = () => {
                       support, making your shopping experience personal.
                     </Typography>
                     <MB10 />
-                    <Typography className="ez-ls-h6 black underline">
+                    <Typography className="ez-ls-h6 black-green underline">
                       Let's chat
                     </Typography>
                   </Flex>
@@ -224,7 +237,7 @@ const HomeLanding = () => {
                     <Typography className="ez-ls-h5 gray">
                       Ezlil Care
                     </Typography>
-                    <Typography className="ez-ls-h3 bold black">
+                    <Typography className="ez-ls-h3 bold black-green">
                       Our Support team is here to help
                     </Typography>
                     <MB20 />
@@ -234,7 +247,7 @@ const HomeLanding = () => {
                       call to action.
                     </Typography>
                     <MB10 />
-                    <Typography className="ez-ls-h6 black underline">
+                    <Typography className="ez-ls-h6 black-green underline">
                       Explore more
                     </Typography>
                   </Flex>

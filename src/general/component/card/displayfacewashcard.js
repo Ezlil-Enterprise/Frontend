@@ -22,11 +22,11 @@ const Displayfacewashcard = () => {
               align="start"
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
-              <Typography className="ez-ls-h4 black">
+              <Typography className="ez-ls-h4 black-green">
                 Rose Petal face wash
               </Typography>
 
-              <Typography className="ez-ls-h6 black">Rs.160</Typography>
+              <Typography className="ez-ls-h6 black-green">Rs.160</Typography>
             </Col>
             <Col
               span={24}
@@ -60,11 +60,11 @@ const Displayfacewashcard = () => {
               align="start"
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
-              <Typography className="ez-ls-h4 black">
+              <Typography className="ez-ls-h4 black-green">
                 Rose Petal face wash
               </Typography>
 
-              <Typography className="ez-ls-h6 black">Rs.160</Typography>
+              <Typography className="ez-ls-h6 black-green">Rs.160</Typography>
             </Col>
             <Col
               span={24}
@@ -98,11 +98,11 @@ const Displayfacewashcard = () => {
               align="start"
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
-              <Typography className="ez-ls-h4 black">
+              <Typography className="ez-ls-h4 black-green">
                 Rose Petal face wash
               </Typography>
 
-              <Typography className="ez-ls-h6 black">Rs.160</Typography>
+              <Typography className="ez-ls-h6 black-green">Rs.160</Typography>
             </Col>
             <Col
               span={24}
@@ -136,11 +136,11 @@ const Displayfacewashcard = () => {
               align="start"
               style={{ padding: "15px 20px 5px 20px", backgroundColor: "#fff" }}
             >
-              <Typography className="ez-ls-h4 black">
+              <Typography className="ez-ls-h4 black-green">
                 Rose Petal face wash
               </Typography>
 
-              <Typography className="ez-ls-h6 black">Rs.160</Typography>
+              <Typography className="ez-ls-h6 black-green">Rs.160</Typography>
             </Col>
             <Col
               span={24}

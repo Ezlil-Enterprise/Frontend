@@ -28,3 +28,26 @@
 .mb-5 {
   margin-bottom: 5px;
 }
+.btn {
+  width: 40%;
+}
+.colored-background {
+  background-color: #158600;
+  color: white;
+}
+.colored-background:hover {
+  border: 1px solid #158600 !important;
+  color: #158600 !important;
+}
+.transparent-background {
+  border: 1px solid #158600;
+  color: #158600;
+}
+.transparent-background:hover {
+  background-color: #158600 !important;
+  color: white !important;
+  border: 1px solid #158600 !important;
+}
+.ant-image {
+  height: 100%;
+}
