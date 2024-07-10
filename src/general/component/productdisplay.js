@@ -19,14 +19,14 @@ import { MB05, MB10, MB20 } from "./widget";
 import "../asset/less/productdetails.less";
 
 const Productdisplay = () => {
-  const { _id } = useParams();
+  const { id } = useParams();
   const [productDetails, setProductDetails] = useState(null);
 
   useEffect(() => {
-    console.log(_id);
+    console.log(id);
     const fetchProductDetails = async () => {
       try {
-        const data = await getProductDetailsByID(_id);
+        const data = await getProductDetailsByID(id);
         setProductDetails(data);
       } catch (error) {
         console.error("Error fetching product details:", error);
@@ -34,7 +34,7 @@ const Productdisplay = () => {
     };
 
     fetchProductDetails();
-  }, [_id]);
+  }, [id]);
 
   if (!productDetails) {
     return <div>Loading...</div>;

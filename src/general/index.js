@@ -110,7 +110,7 @@ const GeneraIndexPage = () => {
         });
 
         const userToken = userSignInResponse.data.jwt;
-        const userDetailsResponse = await getUserDetails(userToken);
+        // const userDetailsResponse = await getUserDetails(userToken);
 
         setIsSignInModalVisible(false);
       }
@@ -134,7 +134,7 @@ const GeneraIndexPage = () => {
   };
 
   const handleLogout = () => {
-    Cookies.remove("user_email");
+    Cookies.remove("user_token");
     dispatch(logout());
     navigate("/");
   };
@@ -291,7 +291,7 @@ const GeneraIndexPage = () => {
                   <Route path="/orders/*" element={<Orders />} />
                   <Route path="/soaps/*" element={<Soaps />} />
                   <Route path="/facewash/*" element={<Facewash />} />
-                  <Route path="/productdetails/*" element={<Productdisplay />} />
+                  <Route path="/productdetails/:id" element={<Productdisplay />} />
                 </Routes>
               </Col>
             </Row>

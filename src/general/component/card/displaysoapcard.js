@@ -10,7 +10,6 @@ const Displaycard = ({category}) => {
   const [productData, setProductData] = useState([]);
   useEffect(() => {
     const fetchProductData = async () => {
-      console.log(category);
       try {
         const response = await getAllProductDetails();
         console.log("Fetched Product Data:", response);
