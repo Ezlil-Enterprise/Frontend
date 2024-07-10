@@ -13,7 +13,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { MB10, MB100, MB20, MB30 } from "../component/widget";
 import { RightOutlined } from "@ant-design/icons";
-import Displaysoapcard from "../component/card/displaysoapcard";
+import Displaycard from "../component/card/displaysoapcard";
 import Displayserumcard from "../component/card/displayserumcard";
 import Displayfacewashcard from "../component/card/displayfacewashcard";
 
@@ -21,26 +21,17 @@ import Link from "antd/es/typography/Link";
 import Footercomponent from "../component/card/footer";
 import { getAllProductDetails } from "../api/product";
 const HomeLanding = () => {
-  const [productData, setProductData] = useState([]);
+ 
   useEffect(() => {
     AOS.init({});
-    const fetchProductData = async () => {
-      try {
-        const response = await getAllProductDetails();
-        console.log("Fetched Product Data:", response);
-        setProductData(response);
-      } catch (error) {
-        console.error("Error fetching product details:", error);
-      }
-    };
-    fetchProductData();
+   
   }, []);
 
   const tabitems = [
     {
       key: "soap",
       label: "Soap",
-      children: <Displaysoapcard />,
+      children: <Displaycard category={"Soap"} />,
     },
     {
       key: "face_serum",

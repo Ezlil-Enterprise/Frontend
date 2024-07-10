@@ -9,48 +9,80 @@ import {
   Tag,
   Typography,
 } from "antd";
-import React from "react";
-import "../asset/less/productdetails.less";
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import demo_prd from "../asset/image/product.jpg";
 import bird_logo from "../asset/image/bird_logo.png";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import demo_background from "../asset/image/demo_background.png";
+import { getProductDetailsByID } from "../api/product";
 import { MB05, MB10, MB20 } from "./widget";
+import "../asset/less/productdetails.less";
+
 const Productdisplay = () => {
+  const { _id } = useParams();
+  const [productDetails, setProductDetails] = useState(null);
+
+  useEffect(() => {
+    console.log(_id);
+    const fetchProductDetails = async () => {
+      try {
+        const data = await getProductDetailsByID(_id);
+        setProductDetails(data);
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      }
+    };
+
+    fetchProductDetails();
+  }, [_id]);
+
+  if (!productDetails) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Row style={{ padding: "30px" }}>
       <Col span={12} style={{ padding: "20px" }}>
-        <Image src={demo_prd} preview={false} style={{ height: "100%" }} />
+        <Image
+          src={productDetails.imageUrl || demo_prd}
+          preview={false}
+          style={{ height: "100%" }}
+        />
       </Col>
       <Col span={12} style={{ padding: "20px" }}>
         <Flex gap="small" className="black-green">
-          <ArrowLeftOutlined className="arrow-icon" />{" "}
-          <Typography className="ez-ls-h5-b1 underline black-green">
-            Back to Product Page
-          </Typography>
+          <ArrowLeftOutlined className="arrow-icon" />
+          <Link to="/">
+            <Typography className="ez-ls-h5-b1 underline black-green">
+              Back to Product Page
+            </Typography>
+          </Link>
         </Flex>
         <MB10 />
         <Space size="middle">
-          <Typography className="ez-ls-h2 black bold">Organic Soap</Typography>
+          <Typography className="ez-ls-h2 black bold">
+            {productDetails.title}
+          </Typography>
           <Space>
             <Image src={bird_logo} preview={false} />
-            <Tag color="#327C3F">RECOMMEDED</Tag>
+            <Tag color="#327C3F">RECOMMENDED</Tag>
           </Space>
         </Space>
         <MB05 />
         <Space size="middle">
-          <Typography className="ez-ls-h2 bold">Rs 80.00</Typography>
-          <Typography className="ez-ls-h5 strike">Rs 89.00</Typography>
-          <Typography className="primary ez-ls-h5">20% off</Typography>
+          <Typography className="ez-ls-h2 bold">
+            Rs {productDetails.discountedPrice}
+          </Typography>
+          <Typography className="ez-ls-h5 strike">
+            Rs {productDetails.price}
+          </Typography>
+          <Typography className="primary ez-ls-h5">
+            {productDetails.discountPersent}% off
+          </Typography>
         </Space>
         <MB10 />
         <Typography className="ez-ns-h5 gray">
-          A luxurious, all-natural soap made with organic lavender essential oil
-          and nourishing ingredients. Perfect for all skin types, leaving your
-          skin feeling soft and refreshed. A luxurious, all-natural soap made
-          with organic lavender essential oil and nourishing ingredients.
-          Perfect for all skin types, leaving your skin feeling soft and
-          refreshed.
+          {productDetails.description}
         </Typography>
         <MB05 />
         <Typography className="ez-ls-h5">Flavours</Typography>

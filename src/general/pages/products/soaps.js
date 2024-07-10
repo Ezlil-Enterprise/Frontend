@@ -3,6 +3,7 @@ import React from "react";
 import { HomeOutlined } from "@ant-design/icons";
 import { MB20 } from "../../component/widget";
 import Displaysoapcard from "../../component/card/displaysoapcard";
+import Displaycard from "../../component/card/displaysoapcard";
 const Soaps = () => {
   return (
     <Row className="container">
@@ -29,7 +30,7 @@ const Soaps = () => {
       </Col>
       <MB20 />
       <Col span={24}>
-        <Displaysoapcard />
+        <Displaycard category={"Soap"} />
       </Col>
     </Row>
   );

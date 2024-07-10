@@ -291,7 +291,7 @@ const GeneraIndexPage = () => {
                   <Route path="/orders/*" element={<Orders />} />
                   <Route path="/soaps/*" element={<Soaps />} />
                   <Route path="/facewash/*" element={<Facewash />} />
-                  <Route path="/productdetails" element={<Productdisplay />} />
+                  <Route path="/productdetails/*" element={<Productdisplay />} />
                 </Routes>
               </Col>
             </Row>
