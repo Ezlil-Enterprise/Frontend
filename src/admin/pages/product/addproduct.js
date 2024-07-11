@@ -10,44 +10,48 @@ import {
   Button,
   Space,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import "../../asset/less/addproduct.less"
 import { InboxOutlined } from "@ant-design/icons";
 import { addProductData } from "../../api/product";
+import { getAllCategoryDetails } from "../../api/category";
+import Cookies from "js-cookie";
 const { Option } = Select;
 const { Dragger } = Upload;
 
 const Addproduct = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
-
-  const ingredientsoptions = [
-    {
-      label: "Glyserin",
-      value: "glyserin",
-    },
-    {
-      label: "Rose Essence",
-      value: "rose_essence",
-    },
-  ];
-
-  const selectAfter = (
-    <Select
-      defaultValue="g"
-      style={{
-        width: 60,
-      }}
-    >
-      <Option value="g">g</Option>
-      <Option value="ml">ml</Option>
-    </Select>
-  );
-
+  const [categoryData, setCatergoryData] = useState([]);
+  const [userToken, setUserToken] = useState(Cookies.get("user_token"));
+  // const selectAfter = (
+  //   <Select
+  //     defaultValue="g"
+  //     style={{
+  //       width: 60,
+  //     }}
+  //   >
+  //     <Option value="g">g</Option>
+  //     <Option value="ml">ml</Option>
+  //   </Select>
+  // );
+  useEffect(() => {
+    const fetchcategoryData = async() => {
+      try{
+        const categoryResponseData = await getAllCategoryDetails(userToken);
+           setCatergoryData(categoryResponseData);
+        console.log(categoryResponseData);
+      }catch (error) {
+        console.error("Error fetching product data:", error);
+        setLoading(false);
+      }
+    };
+    fetchcategoryData();
+  }, []);
   const uploadProps = {
-    name: "p_image",
+    name: "imageUrl",
     multiple: false,
     beforeUpload: (file) => {
       setFileList([file]);
@@ -63,14 +67,14 @@ const Addproduct = () => {
     try {
       const formData = new FormData();
       for (const key in values) {
-        if (key === "p_description") {
+        if (key === "description") {
           formData.append(key, values[key].replace(/<[^>]+>/g, ""));
         } else {
           formData.append(key, values[key]);
         }
       }
       if (fileList.length > 0) {
-        formData.append("p_image", fileList[0]);
+        formData.append("imageUrl", fileList[0]);
       }
 
       const addProductDataResponse = await addProductData(formData);
@@ -114,7 +118,7 @@ const Addproduct = () => {
                 <Col span={24}>
                   <Form.Item
                     label="Product Name"
-                    name="p_name"
+                    name="title"
                     rules={[
                       {
                         required: true,
@@ -128,7 +132,7 @@ const Addproduct = () => {
                 <Col span={24}>
                   <Form.Item
                     label="Product Description"
-                    name="p_description"
+                    name="description"
                     rules={[
                       {
                         required: true,
@@ -155,14 +159,15 @@ const Addproduct = () => {
                     ]}
                   >
                     <Select placeholder="--Select--" allowClear>
-                      <Option value="soap">Soap</Option>
-                      <Option value="face_wash">Face Wash</Option>
-                      <Option value="face_mask">Face Mask</Option>
-                      <Option value="face_serum">Face Serum</Option>
+                      {categoryData.map((category) => (
+                        <Option key={category._id} value={category.name}>
+                          {category.name}
+                        </Option>
+                      ))}
                     </Select>
                   </Form.Item>
                 </Col>
-                <Col span={12}>
+                {/* <Col span={12}>
                   <Form.Item
                     label="SKU"
                     name="SKU"
@@ -176,11 +181,11 @@ const Addproduct = () => {
                   >
                     <Input placeholder="SKU" />
                   </Form.Item>
-                </Col>
+                </Col> */}
                 <Col span={12}>
                   <Form.Item
                     label="Regular Price"
-                    name="regular_price"
+                    name="price"
                     rules={[
                       {
                         required: true,
@@ -198,8 +203,8 @@ const Addproduct = () => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    label="Sales Price"
-                    name="sales_price"
+                    label="Discounted Price"
+                    name="discountedPrice"
                     rules={[
                       {
                         required: true,
@@ -217,8 +222,27 @@ const Addproduct = () => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
+                    label="Total Discounted"
+                    name="discountPersent"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Sales Discount is required.",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      min={1}
+                      style={{
+                        width: 150,
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
                     label="Stock"
-                    name="quantity_available"
+                    name="quantity"
                     rules={[
                       {
                         required: true,
@@ -236,6 +260,25 @@ const Addproduct = () => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
+                    label="Brand"
+                    name="brand"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Brand is required.",
+                      },
+                    ]}
+                  >
+                    <Input
+                      min={1}
+                      style={{
+                        width: 150,
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                {/* <Col span={12}>
+                  <Form.Item
                     label="Weight"
                     name="weight_volume"
                     rules={[
@@ -247,8 +290,8 @@ const Addproduct = () => {
                   >
                     <InputNumber addonAfter={selectAfter} />
                   </Form.Item>
-                </Col>
-                <Col span={12}>
+                </Col> */}
+                {/* <Col span={12}>
                   <Form.Item
                     label="Ingredients"
                     name="ingredients"
@@ -270,8 +313,8 @@ const Addproduct = () => {
                       options={ingredientsoptions}
                     />
                   </Form.Item>
-                </Col>
-                <Col span={12}>
+                </Col> */}
+                {/* <Col span={12}>
                   <Form.Item
                     name="manufacturer"
                     label="Manufacturer"
@@ -287,8 +330,8 @@ const Addproduct = () => {
                       <Option value="soul_sitara">Soul Sitara</Option>
                     </Select>
                   </Form.Item>
-                </Col>
-                <Col span={12}>
+                </Col> */}
+                {/* <Col span={12}>
                   <Form.Item
                     name="status"
                     label="Status"
@@ -304,7 +347,7 @@ const Addproduct = () => {
                       <Option value="Inactive">InActive</Option>
                     </Select>
                   </Form.Item>
-                </Col>
+                </Col> */}
               </Row>
             </Col>
             <Col span={12}>

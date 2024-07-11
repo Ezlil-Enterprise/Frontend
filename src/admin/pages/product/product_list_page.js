@@ -12,17 +12,27 @@ import {
 import Search from "antd/es/transfer/search";
 import React, { useEffect, useState } from "react";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { deleteProductByID, getProductDetails } from "../../api/product"
+import {
+  deleteProductByID,
+  getAllProductDetails,
+  getProductDetails,
+} from "../../api/product";
 import { Form, useNavigate } from "react-router-dom";
+import { getAllCategoryDetails } from "../../api/category";
+import Cookies from "js-cookie";
 
 const ProductListPage = () => {
   const [productData, setProductData] = useState([]);
+  const [categoryData, setCatergoryData] = useState([]);
+  const [userToken, setUserToken] = useState(Cookies.get("user_token"));
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const productResponseData = await getProductDetails();
+        const productResponseData = await getAllProductDetails();
+
         if (Array.isArray(productResponseData)) {
           setProductData(productResponseData);
         }
@@ -36,21 +46,30 @@ const ProductListPage = () => {
 
     fetchData();
   }, []);
+
   const productColumn = [
+    // {
+    //   title: "SKU",
+    //   dataIndex: "SKU",
+    //   render: (text, record) => (
+    //     <a onClick={() => handleUpdateProduct(record)}>{text}</a>
+    //   ),
+    // },
     {
-      title: "SKU",
-      dataIndex: "SKU",
+      title: "Product",
+      dataIndex: "title",
       render: (text, record) => (
         <a onClick={() => handleUpdateProduct(record)}>{text}</a>
       ),
     },
     {
-      title: "Product",
-      dataIndex: "p_name",
+      title: "Brand",
+      dataIndex: "brand",
+      sorter: (a, b) => a.stock - b.stock,
     },
     {
       title: "Category",
-      dataIndex: "p_category",
+      dataIndex: ["category", "name"],
       filters: [
         {
           text: "Soap",
@@ -75,35 +94,15 @@ const ProductListPage = () => {
     },
     {
       title: "Price",
-      dataIndex: "sales_price",
+      dataIndex: "price",
       sorter: (a, b) => a.price - b.price,
     },
     {
       title: "Stock",
-      dataIndex: "quantity_available",
+      dataIndex: "quantity",
       sorter: (a, b) => a.stock - b.stock,
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-      filters: [
-        {
-          text: "In Stock",
-          value: "in_stock",
-        },
-        {
-          text: "Out of Stock",
-          value: "out_of_stock",
-        },
-        {
-          text: "Limited Stock",
-          value: "limited_stock",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.name.startsWith(value),
-    },
+
     {
       title: "Action",
       dataIndex: "action",

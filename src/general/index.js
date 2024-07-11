@@ -98,11 +98,7 @@ const GeneraIndexPage = () => {
       console.log(userSignInResponse);
       if (userSignInResponse) {
         message.success("Signin successful!");
-        if (userSignInResponse.role === "SuperAdmin") {
-          navigate("/dashboard");
-        } else {
-          navigate("/");
-        }
+      
         Cookies.set("user_token", userSignInResponse.data.jwt, {
           expires: 7,
           secure: false,
@@ -110,8 +106,12 @@ const GeneraIndexPage = () => {
         });
 
         const userToken = userSignInResponse.data.jwt;
-        // const userDetailsResponse = await getUserDetails(userToken);
-
+        const userDetailsResponse = await getUserDetails(userToken);
+        if (userDetailsResponse.role === "SuperAdmin") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
         setIsSignInModalVisible(false);
       }
     } catch (error) {
