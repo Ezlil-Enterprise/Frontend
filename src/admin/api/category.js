@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 export const getAllCategoryDetails = async (token) => {
-    console.log(token);
     try {
       const response = await axios.get("http://localhost:4001/api/category/category",  {
         headers: {
