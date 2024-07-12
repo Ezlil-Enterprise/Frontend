@@ -42,10 +42,10 @@ const Addproduct = () => {
       try{
         const categoryResponseData = await getAllCategoryDetails(userToken);
            setCatergoryData(categoryResponseData);
-        console.log(categoryResponseData);
+
       }catch (error) {
         console.error("Error fetching product data:", error);
-        setLoading(false);
+        // setLoading(false);
       }
     };
     fetchcategoryData();

@@ -17,21 +17,31 @@ import ReactQuill from "react-quill";
 import { InboxOutlined } from "@ant-design/icons";
 import { getProductDetailsByID, updateProductDetails } from "../../api/product";
 import "../../asset/less/addproduct.less";
-
+import Cookies from "js-cookie";
+import { getAllCategoryDetails } from "../../api/category";
 const { Option } = Select;
 const { Dragger } = Upload;
 
 const UpdateProduct = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
+  const [categoryData, setCatergoryData] = useState([]);
+  const [userToken, setUserToken] = useState(Cookies.get("user_token"));
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const ingredientsoptions = [
-    { label: "Glyserin", value: "glyserin" },
-    { label: "Rose Essence", value: "rose_essence" },
-  ];
-
+  useEffect(() => {
+    const fetchcategoryData = async () => {
+      try {
+        const categoryResponseData = await getAllCategoryDetails(userToken);
+        setCatergoryData(categoryResponseData);
+       
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+        // setLoading(false);
+      }
+    };
+    fetchcategoryData();
+  }, []);
   const selectAfter = (
     <Select defaultValue="g" style={{ width: 60 }}>
       <Option value="g">g</Option>
@@ -40,7 +50,7 @@ const UpdateProduct = () => {
   );
 
   const uploadProps = {
-    name: "p_image",
+    name: "imageUrl",
     multiple: false,
     beforeUpload: (file) => {
       setFileList([file]);
@@ -56,17 +66,17 @@ const UpdateProduct = () => {
     const fetchProduct = async () => {
       try {
         const response = await getProductDetailsByID(id);
-
+        
         if (response) {
           form.setFieldsValue(response);
 
-          if (response.p_image) {
+          if (response.imageUrl) {
             setFileList([
               {
                 uid: "-1",
-                name: response.p_image.split("/").pop(),
+                name: response.imageUrl.split("/").pop(),
                 status: "done",
-                url: `http://localhost:4001/${response.p_image}`,
+                url: `http://localhost:4001/${response.imageUrl}`,
               },
             ]);
           }
@@ -85,13 +95,17 @@ const UpdateProduct = () => {
 
   const onFinish = async (values) => {
     try {
-      values.p_description = values.p_description.replace(/<[^>]+>/g, "");
+      values.description = values.description.replace(/<[^>]+>/g, "");
 
       if (fileList.length > 0) {
-        values.p_image = fileList[0];
+        values.imageUrl = fileList[0].url;
       }
 
-      const updateProductDataResponse = await updateProductDetails(id, values);
+      const updateProductDataResponse = await updateProductDetails(
+        id,
+        values,
+        userToken
+      );
 
       if (updateProductDataResponse) {
         message.success("Product updated successfully!");
@@ -130,8 +144,13 @@ const UpdateProduct = () => {
                 <Col span={24}>
                   <Form.Item
                     label="Product Name"
-                    name="p_name"
-                    rules={[{ required: true, message: "Name is required." }]}
+                    name="title"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Name is required.",
+                      },
+                    ]}
                   >
                     <Input placeholder="Eg: Rose" />
                   </Form.Item>
@@ -139,9 +158,12 @@ const UpdateProduct = () => {
                 <Col span={24}>
                   <Form.Item
                     label="Product Description"
-                    name="p_description"
+                    name="description"
                     rules={[
-                      { required: true, message: "Description is required." },
+                      {
+                        required: true,
+                        message: "Description is required.",
+                      },
                     ]}
                   >
                     <ReactQuill
@@ -153,94 +175,180 @@ const UpdateProduct = () => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    name="p_category"
+                    name="category"
                     label="Category"
                     rules={[
-                      { required: true, message: "Category is required." },
+                      {
+                        required: true,
+                        message: "Category is required.",
+                      },
                     ]}
                   >
                     <Select placeholder="--Select--" allowClear>
-                      <Option value="soap">Soap</Option>
-                      <Option value="face_wash">Face Wash</Option>
-                      <Option value="face_mask">Face Mask</Option>
-                      <Option value="face_serum">Face Serum</Option>
+                      {categoryData.map((category) => (
+                        <Option key={category._id} value={category._id}>
+                          {category.name}
+                        </Option>
+                      ))}
                     </Select>
                   </Form.Item>
                 </Col>
-                <Col span={12}>
+                {/* <Col span={12}>
                   <Form.Item
                     label="SKU"
                     name="SKU"
-                    rules={[{ required: true, message: "SKU is required." }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: "SKU is required.",
+                      },
+                    ]}
                     tooltip="stock keeping unit"
                   >
                     <Input placeholder="SKU" />
                   </Form.Item>
-                </Col>
+                </Col> */}
                 <Col span={12}>
                   <Form.Item
                     label="Regular Price"
-                    name="regular_price"
+                    name="price"
                     rules={[
-                      { required: true, message: "Regular price is required." },
+                      {
+                        required: true,
+                        message: "Regular price is required.",
+                      },
                     ]}
                   >
-                    <InputNumber min={1} style={{ width: 150 }} />
+                    <InputNumber
+                      min={1}
+                      style={{
+                        width: 150,
+                      }}
+                    />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    label="Sales Price"
-                    name="sales_price"
+                    label="Discounted Price"
+                    name="discountedPrice"
                     rules={[
-                      { required: true, message: "Sales price is required." },
+                      {
+                        required: true,
+                        message: "Sales price is required.",
+                      },
                     ]}
                   >
-                    <InputNumber min={1} style={{ width: 150 }} />
+                    <InputNumber
+                      min={1}
+                      style={{
+                        width: 150,
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="Total Discounted"
+                    name="discountPersent"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Sales Discount is required.",
+                      },
+                    ]}
+                  >
+                    <InputNumber
+                      min={1}
+                      style={{
+                        width: 150,
+                      }}
+                    />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item
                     label="Stock"
-                    name="quantity_available"
-                    rules={[{ required: true, message: "Stock is required." }]}
+                    name="quantity"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Stock is required.",
+                      },
+                    ]}
                   >
-                    <InputNumber min={1} style={{ width: 150 }} />
+                    <InputNumber
+                      min={1}
+                      style={{
+                        width: 150,
+                      }}
+                    />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item
+                    label="Brand"
+                    name="brand"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Brand is required.",
+                      },
+                    ]}
+                  >
+                    <Input
+                      min={1}
+                      style={{
+                        width: 150,
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                {/* <Col span={12}>
+                  <Form.Item
                     label="Weight"
                     name="weight_volume"
-                    rules={[{ required: true, message: "Weight is required." }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Weight is required.",
+                      },
+                    ]}
                   >
                     <InputNumber addonAfter={selectAfter} />
                   </Form.Item>
-                </Col>
-                <Col span={12}>
+                </Col> */}
+                {/* <Col span={12}>
                   <Form.Item
                     label="Ingredients"
                     name="ingredients"
                     rules={[
-                      { required: true, message: "Ingredients are required." },
+                      {
+                        required: true,
+                        message: "Ingredients are required.",
+                      },
                     ]}
                   >
                     <Select
                       mode="multiple"
                       allowClear
                       showSearch
-                      style={{ width: "100%" }}
+                      style={{
+                        width: "100%",
+                      }}
                       placeholder="Please select"
                       options={ingredientsoptions}
                     />
                   </Form.Item>
-                </Col>
-                <Col span={12}>
+                </Col> */}
+                {/* <Col span={12}>
                   <Form.Item
                     name="manufacturer"
                     label="Manufacturer"
                     rules={[
-                      { required: true, message: "Manufacturer is required." },
+                      {
+                        required: true,
+                        message: "Manufacturer is required.",
+                      },
                     ]}
                   >
                     <Select placeholder="--Select--" allowClear>
@@ -248,57 +356,46 @@ const UpdateProduct = () => {
                       <Option value="soul_sitara">Soul Sitara</Option>
                     </Select>
                   </Form.Item>
-                </Col>
-                <Col span={12}>
+                </Col> */}
+                {/* <Col span={12}>
                   <Form.Item
                     name="status"
                     label="Status"
-                    rules={[{ required: true, message: "Status is required." }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Status is required.",
+                      },
+                    ]}
                   >
                     <Select placeholder="--Select--" allowClear>
                       <Option value="Active">Active</Option>
-                      <Option value="Inactive">Inactive</Option>
+                      <Option value="Inactive">InActive</Option>
                     </Select>
                   </Form.Item>
-                </Col>
+                </Col> */}
               </Row>
             </Col>
             <Col span={12}>
               <Dragger {...uploadProps} style={{ height: "200px" }}>
-                {fileList.length > 0 && fileList[0].url ? (
-                  <img
-                    src={fileList[0].url}
-                    alt="Product"
-                    style={{
-                      width: "100%",
-                      height: "200px",
-                      objectFit: "contain",
-                    }}
-                  />
-                ) : (
-                  <>
-                    <p className="ant-upload-drag-icon">
-                      <InboxOutlined />
-                    </p>
-                    <p className="ant-upload-text">
-                      Click or drag file to this area to upload
-                    </p>
-                    <p className="ant-upload-hint">
-                      Support for a single or bulk upload. Strictly prohibited
-                      from uploading company data or other banned files.
-                    </p>
-                  </>
-                )}
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">
+                  Click or drag file to this area to upload
+                </p>
+                <p className="ant-upload-hint">
+                  Support for a single or bulk upload. Strictly prohibited from
+                  uploading company data or other banned files.
+                </p>
               </Dragger>
             </Col>
             <Col span={24}>
               <Space>
                 <Button type="primary" htmlType="submit">
-                  Update
+                  Create
                 </Button>
-                <Button danger onClick={() => navigate("/products")}>
-                  Cancel
-                </Button>
+                <Button danger>Cancel</Button>
               </Space>
             </Col>
           </Row>

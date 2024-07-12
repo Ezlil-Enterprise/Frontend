@@ -12,7 +12,7 @@ export const getAllProductDetails = async () => {
 export const getProductDetailsByID = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:4001/api/products/${id}`
+      `http://localhost:4001/api/products/id/${id}`
     );
     return response.data;
   } catch (error) {
@@ -38,27 +38,34 @@ export const addProductData = async (formData) => {
     throw error;
   }
 };
-export const updateProductDetails = async (id, values) => {
+export const updateProductDetails = async (id, values,token) => {
+ 
   try {
-    const response = await axios.patch(
+    const response = await axios.put(
       `http://localhost:4001/api/admin/products/${id}`,
       values,
       {
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       }
     );
+
     return response.data;
   } catch (error) {
     console.error("Error fetching product details:", error);
     throw error;
   }
 };
-export const deleteProductByID = async (id) => {
+export const deleteProductByID = async (id,token) => {
   try {
     const response = await axios.delete(
-      `http://localhost:4001/api/admin/products/${id}`
+      `http://localhost:4001/api/admin/products/${id}`,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      }
     );
     return response.data;
   } catch (error) {

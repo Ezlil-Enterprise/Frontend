@@ -122,7 +122,7 @@ const ProductListPage = () => {
   };
   const handleDeleteProduct = async (id) => {
     try {
-      await deleteProductByID(id);
+      await deleteProductByID(id,userToken);
       message.success("Product deleted successfully");
       setProductData(productData.filter((product) => product._id !== id));
     } catch (error) {
