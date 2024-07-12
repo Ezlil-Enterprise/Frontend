@@ -149,7 +149,7 @@ const Addproduct = () => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    name="p_category"
+                    name="category"
                     label="Category"
                     rules={[
                       {

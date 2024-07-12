@@ -22,6 +22,7 @@ export const getProductDetailsByID = async (id) => {
 };
 export const addProductData = async (formData) => {
   try {
+   
     const response = await axios.post(
       "http://localhost:4001/api/admin/products/",
       formData,
