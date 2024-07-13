@@ -115,14 +115,14 @@ const ProductListPage = () => {
     },
   ];
   const handleAddProducts = () => {
-    navigate("/products/addproduct");
+    navigate("/admin/products/addproduct");
   };
   const handleUpdateProduct = (record) => {
-    navigate(`/products/updateproduct/${record._id}`);
+    navigate(`/admin/products/updateproduct/${record._id}`);
   };
   const handleDeleteProduct = async (id) => {
     try {
-      await deleteProductByID(id,userToken);
+      await deleteProductByID(id, userToken);
       message.success("Product deleted successfully");
       setProductData(productData.filter((product) => product._id !== id));
     } catch (error) {
@@ -194,7 +194,7 @@ const ProductListPage = () => {
               }}
               dataSource={productData}
               loading={loading}
-              rowKey="SKU"
+              rowKey="title"
             />
           </Col>
         </Row>

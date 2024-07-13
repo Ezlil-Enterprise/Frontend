@@ -34,10 +34,8 @@ const UpdateProduct = () => {
       try {
         const categoryResponseData = await getAllCategoryDetails(userToken);
         setCatergoryData(categoryResponseData);
-       
       } catch (error) {
         console.error("Error fetching product data:", error);
-        // setLoading(false);
       }
     };
     fetchcategoryData();
@@ -66,7 +64,7 @@ const UpdateProduct = () => {
     const fetchProduct = async () => {
       try {
         const response = await getProductDetailsByID(id);
-        
+
         if (response) {
           form.setFieldsValue(response);
 
@@ -109,7 +107,7 @@ const UpdateProduct = () => {
 
       if (updateProductDataResponse) {
         message.success("Product updated successfully!");
-        navigate("/products");
+        navigate("/admin/products");
       }
     } catch (error) {
       if (error.response) {
@@ -303,10 +301,10 @@ const UpdateProduct = () => {
                     />
                   </Form.Item>
                 </Col>
-                {/* <Col span={12}>
+                <Col span={12}>
                   <Form.Item
                     label="Weight"
-                    name="weight_volume"
+                    name="weight"
                     rules={[
                       {
                         required: true,
@@ -316,34 +314,12 @@ const UpdateProduct = () => {
                   >
                     <InputNumber addonAfter={selectAfter} />
                   </Form.Item>
-                </Col> */}
-                {/* <Col span={12}>
-                  <Form.Item
-                    label="Ingredients"
-                    name="ingredients"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Ingredients are required.",
-                      },
-                    ]}
-                  >
-                    <Select
-                      mode="multiple"
-                      allowClear
-                      showSearch
-                      style={{
-                        width: "100%",
-                      }}
-                      placeholder="Please select"
-                      options={ingredientsoptions}
-                    />
-                  </Form.Item>
-                </Col> */}
-                {/* <Col span={12}>
+                </Col>
+
+                <Col span={12}>
                   <Form.Item
                     name="manufacturer"
-                    label="Manufacturer"
+                    label="manufacturer"
                     rules={[
                       {
                         required: true,
@@ -356,7 +332,7 @@ const UpdateProduct = () => {
                       <Option value="soul_sitara">Soul Sitara</Option>
                     </Select>
                   </Form.Item>
-                </Col> */}
+                </Col>
                 {/* <Col span={12}>
                   <Form.Item
                     name="status"
@@ -393,9 +369,11 @@ const UpdateProduct = () => {
             <Col span={24}>
               <Space>
                 <Button type="primary" htmlType="submit">
-                  Create
+                  Update
                 </Button>
-                <Button danger>Cancel</Button>
+                <Button danger onClick={() => navigate("/products")}>
+                  Cancel
+                </Button>
               </Space>
             </Col>
           </Row>

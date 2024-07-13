@@ -95,10 +95,24 @@ import {
                   <Col span={24}>
                     <Typography>Basic Info</Typography>
                   </Col>
-                  <Col span={24}>
+                  <Col span={12}>
                     <Form.Item
-                      name="name"
-                      label="Customer Name"
+                      name="firstName"
+                      label="First Name"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input customer name!",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      name="lastName"
+                      label="Last Name"
                       rules={[
                         {
                           required: true,
@@ -140,7 +154,7 @@ import {
                   </Col>
                   <Col span={12}>
                     <Form.Item
-                      name="phone"
+                      name="mobile"
                       label="Phone"
                       rules={[
                         {
@@ -154,7 +168,7 @@ import {
                   </Col>
                   <Col span={12}>
                     <Form.Item
-                      name="user_role"
+                      name="role"
                       label="Role"
                       rules={[
                         { required: true, message: "Please select your role!" },
@@ -167,7 +181,7 @@ import {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  {/* <Col span={12}>
                     <Form.Item
                       name="status"
                       label="Status"
@@ -183,7 +197,7 @@ import {
                         <Option value="Inactive">Inactive</Option>
                       </Select>
                     </Form.Item>
-                  </Col>
+                  </Col> */}
                 </Row>
               </Col>
               <Col span={12}>

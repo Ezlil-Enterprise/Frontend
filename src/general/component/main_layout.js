@@ -8,10 +8,10 @@ import {
   MoonOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import LeftMenu from "./left_menu";
+import LeftMenu from "../../admin/components/left_menu.js";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { getUserDetails, getUserDetailsByEmail } from "../api/authentication.js";
+import { getUserDetails } from "../api/authentication.js";
 const { Header, Content } = Layout;
 
 const MainLayout = ({ children }) => {
@@ -41,48 +41,45 @@ const MainLayout = ({ children }) => {
   };
 
   return (
-  
-    
-        <>
-          {userDetails?.role === "SuperAdmin" ? (
-            <Layout className="main-layout">
-              <LeftMenu />
-              <Layout className="main-right">
-                <Header style={{ backgroundColor: "#ffffff", zIndex: 999 }}>
-                  <Row align="middle">
-                    <Col span={8}>
-                      <Input placeholder="Search" prefix={<SearchOutlined />} />
-                    </Col>
-                    <Col span={16}>
-                      <Space
-                        size="large"
-                        style={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          alignItems: "center",
-                        }}
-                      >
-                        <MoonOutlined />
-                        <BellOutlined />
-                        <LogoutOutlined onClick={handleLogout} />
-                        <Avatar src="./images/user.jpg" />
-                      </Space>
-                    </Col>
-                  </Row>
-                </Header>
-                <div className="content-wrapper">
-                  <Content className="content">{children}</Content>
-                </div>
-              </Layout>
-            </Layout>
-          ) : (
-            <Layout>
+    <>
+      {userDetails?.role === "SuperAdmin" ? (
+        <Layout className="main-layout">
+          <LeftMenu />
+          <Layout className="main-right">
+            <Header style={{ backgroundColor: "#ffffff", zIndex: 999 }}>
+              <Row align="middle">
+                <Col span={8}>
+                  <Input placeholder="Search" prefix={<SearchOutlined />} />
+                </Col>
+                <Col span={16}>
+                  <Space
+                    size="large"
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                    }}
+                  >
+                    <MoonOutlined />
+                    <BellOutlined />
+                    <LogoutOutlined onClick={handleLogout} />
+                    <Avatar src="./images/user.jpg" />
+                  </Space>
+                </Col>
+              </Row>
+            </Header>
+            <div className="content-wrapper">
               <Content className="content">{children}</Content>
-            </Layout>
-          )}
-        </>
-      )};
-
-
+            </div>
+          </Layout>
+        </Layout>
+      ) : (
+        <Layout>
+          <Content className="content">{children}</Content>
+        </Layout>
+      )}
+    </>
+  );
+};
 
 export default MainLayout;

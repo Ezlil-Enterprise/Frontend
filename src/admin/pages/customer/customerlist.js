@@ -11,7 +11,7 @@ import {
 import Search from "antd/es/transfer/search";
 import React, { useEffect, useState } from "react";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { deleteCustomerByID,getCustomerDetails } from "../../api/customer";
+import { deleteCustomerByID, getCustomerDetails } from "../../api/customer";
 import { useNavigate } from "react-router-dom";
 
 const CustomerListPage = () => {
@@ -38,7 +38,7 @@ const CustomerListPage = () => {
   const customerColumn = [
     {
       title: "Name",
-      dataIndex: "name",
+      dataIndex: "firstName",
       render: (text, record) => (
         <a onClick={() => handleUpdateCustomer(record)}>{text}</a>
       ),
@@ -47,27 +47,32 @@ const CustomerListPage = () => {
       title: "Email",
       dataIndex: "email",
     },
+
     {
       title: "User Role",
-      dataIndex: "user_role",
+      dataIndex: "role",
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      filters: [
-        {
-          text: "Active",
-          value: "Active",
-        },
-        {
-          text: "Inactive",
-          value: "Inactive",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.name.startsWith(value),
+      title: "Phone",
+      dataIndex: "mobile",
     },
+    // {
+    //   title: "Status",
+    //   dataIndex: "status",
+    //   filters: [
+    //     {
+    //       text: "Active",
+    //       value: "Active",
+    //     },
+    //     {
+    //       text: "Inactive",
+    //       value: "Inactive",
+    //     },
+    //   ],
+    //   filterMode: "tree",
+    //   filterSearch: true,
+    //   onFilter: (value, record) => record.name.startsWith(value),
+    // },
     {
       title: "Action",
       dataIndex: "action",
@@ -80,10 +85,10 @@ const CustomerListPage = () => {
     },
   ];
   const handleAddCustomers = () => {
-    navigate("/customers/addcustomer");
+    navigate("/admin/customers/addcustomer");
   };
   const handleUpdateCustomer = (record) => {
-    navigate(`/customers/updatecustomer/${record._id}`);
+    navigate(`/admin/customers/updatecustomer/${record._id}`);
   };
   const handleDeleteCustomer = async (id) => {
     try {

@@ -13,7 +13,7 @@ import {
 import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
-import "../../asset/less/addproduct.less"
+import "../../asset/less/addproduct.less";
 import { InboxOutlined } from "@ant-design/icons";
 import { addProductData } from "../../api/product";
 import { getAllCategoryDetails } from "../../api/category";
@@ -26,26 +26,24 @@ const Addproduct = () => {
   const [fileList, setFileList] = useState([]);
   const [categoryData, setCatergoryData] = useState([]);
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
-  // const selectAfter = (
-  //   <Select
-  //     defaultValue="g"
-  //     style={{
-  //       width: 60,
-  //     }}
-  //   >
-  //     <Option value="g">g</Option>
-  //     <Option value="ml">ml</Option>
-  //   </Select>
-  // );
+  const selectAfter = (
+    <Select
+      defaultValue="g"
+      style={{
+        width: 60,
+      }}
+    >
+      <Option value="g">g</Option>
+      <Option value="ml">ml</Option>
+    </Select>
+  );
   useEffect(() => {
-    const fetchcategoryData = async() => {
-      try{
+    const fetchcategoryData = async () => {
+      try {
         const categoryResponseData = await getAllCategoryDetails(userToken);
-           setCatergoryData(categoryResponseData);
-
-      }catch (error) {
+        setCatergoryData(categoryResponseData);
+      } catch (error) {
         console.error("Error fetching product data:", error);
-        // setLoading(false);
       }
     };
     fetchcategoryData();
@@ -277,10 +275,10 @@ const Addproduct = () => {
                     />
                   </Form.Item>
                 </Col>
-                {/* <Col span={12}>
+                <Col span={12}>
                   <Form.Item
                     label="Weight"
-                    name="weight_volume"
+                    name="weight"
                     rules={[
                       {
                         required: true,
@@ -290,31 +288,9 @@ const Addproduct = () => {
                   >
                     <InputNumber addonAfter={selectAfter} />
                   </Form.Item>
-                </Col> */}
-                {/* <Col span={12}>
-                  <Form.Item
-                    label="Ingredients"
-                    name="ingredients"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Ingredients are required.",
-                      },
-                    ]}
-                  >
-                    <Select
-                      mode="multiple"
-                      allowClear
-                      showSearch
-                      style={{
-                        width: "100%",
-                      }}
-                      placeholder="Please select"
-                      options={ingredientsoptions}
-                    />
-                  </Form.Item>
-                </Col> */}
-                {/* <Col span={12}>
+                </Col>
+
+                <Col span={12}>
                   <Form.Item
                     name="manufacturer"
                     label="Manufacturer"
@@ -330,7 +306,7 @@ const Addproduct = () => {
                       <Option value="soul_sitara">Soul Sitara</Option>
                     </Select>
                   </Form.Item>
-                </Col> */}
+                </Col>
                 {/* <Col span={12}>
                   <Form.Item
                     name="status"
@@ -367,7 +343,7 @@ const Addproduct = () => {
             <Col span={24}>
               <Space>
                 <Button type="primary" htmlType="submit">
-                  Create
+                  Add
                 </Button>
                 <Button danger>Cancel</Button>
               </Space>
