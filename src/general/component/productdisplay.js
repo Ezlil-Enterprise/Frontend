@@ -17,13 +17,14 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import { getProductDetailsByID } from "../api/product";
 import { MB05, MB10, MB20 } from "./widget";
 import "../asset/less/productdetails.less";
+import { addCartDetails } from "../api/cart";
+import Cookies from 'js-cookie';
 
 const Productdisplay = () => {
   const { id } = useParams();
   const [productDetails, setProductDetails] = useState(null);
-
+  const [userToken, setUserToken] = useState(Cookies.get("user_token"));
   useEffect(() => {
-    console.log(id);
     const fetchProductDetails = async () => {
       try {
         const data = await getProductDetailsByID(id);
@@ -39,12 +40,23 @@ const Productdisplay = () => {
   if (!productDetails) {
     return <div>Loading...</div>;
   }
-
+const handleAddtoCart= async()=>{
+  try {
+   
+    const addtoCartResponse = await addCartDetails(userToken,productDetails);
+    console.log(addtoCartResponse)
+  } catch (error) {
+    console.error("Error fetching product details:", error);
+  }
+}
+const imageUrl = productDetails.imageUrl
+? `http://localhost:4001/${productDetails.imageUrl}`
+: demo_prd;
   return (
     <Row style={{ padding: "30px" }}>
       <Col span={12} style={{ padding: "20px" }}>
         <Image
-          src={productDetails.imageUrl || demo_prd}
+          src={imageUrl || demo_prd}
           preview={false}
           style={{ height: "100%" }}
         />
@@ -61,7 +73,7 @@ const Productdisplay = () => {
         <MB10 />
         <Space size="middle">
           <Typography className="ez-ls-h2 black bold">
-            {productDetails.title}
+            {productDetails.imageUrl}
           </Typography>
           <Space>
             <Image src={bird_logo} preview={false} />
@@ -101,7 +113,7 @@ const Productdisplay = () => {
           <Button className="colored-background btn" shape="round">
             Buy Now
           </Button>
-          <Button className="transparent-background btn" shape="round">
+          <Button className="transparent-background btn" shape="round" onClick={handleAddtoCart}>
             Add to Cart
           </Button>
         </Flex>

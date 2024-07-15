@@ -43,6 +43,7 @@ import Orders from "./pages/orders";
 import Soaps from "./pages/products/soaps";
 import Facewash from "./pages/products/facewash";
 import Productdisplay from "./component/productdisplay";
+import Cart from "./pages/cart";
 
 const GeneraIndexPage = () => {
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
@@ -95,10 +96,9 @@ const GeneraIndexPage = () => {
     try {
       const values = await signInForm.validateFields();
       const userSignInResponse = await userSignin(values);
-      console.log(userSignInResponse);
       if (userSignInResponse) {
         message.success("Signin successful!");
-      
+
         Cookies.set("user_token", userSignInResponse.data.jwt, {
           expires: 7,
           secure: false,
@@ -276,6 +276,7 @@ const GeneraIndexPage = () => {
                 />
                 <ShoppingCartOutlined
                   style={{ fontSize: "1.4em", marginRight: "20px" }}
+                  onClick={() => navigate("/cart")}
                 />
                 <Dropdown overlay={userMenu}>
                   <UserOutlined style={{ fontSize: "1.4em" }} />
@@ -288,10 +289,14 @@ const GeneraIndexPage = () => {
               <Col span={24}>
                 <Routes basepath="/">
                   <Route path="/*" element={<HomeLanding />} />
-                  <Route path="/orders/*" element={<Orders />} />
-                  <Route path="/soaps/*" element={<Soaps />} />
-                  <Route path="/facewash/*" element={<Facewash />} />
-                  <Route path="/productdetails/:id" element={<Productdisplay />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/soaps" element={<Soaps />} />
+                  <Route path="/facewash" element={<Facewash />} />
+                  <Route
+                    path="/productdetails/:id"
+                    element={<Productdisplay />}
+                  />
                 </Routes>
               </Col>
             </Row>
@@ -316,7 +321,7 @@ const GeneraIndexPage = () => {
             rules={[{ required: true, message: "Please input your username!" }]}
           >
             <Input
-              id="usernameInput"
+              // id="usernameInput"
               placeholder="Username"
               size="large"
               style={{ borderRadius: "15px" }}
@@ -327,7 +332,7 @@ const GeneraIndexPage = () => {
             rules={[{ required: true, message: "Please input your username!" }]}
           >
             <Input
-              id="usernameInput"
+              // id="usernameInput"
               placeholder="Username"
               size="large"
               style={{ borderRadius: "15px" }}

@@ -2,7 +2,7 @@ const axios = require("axios");
 export const userSignup = async (formData) => {
   try {
     const response = await axios.post(
-      " http://localhost:4001/auth/signup",
+      "http://localhost:4001/auth/signup",
       formData
     );
     return response;
