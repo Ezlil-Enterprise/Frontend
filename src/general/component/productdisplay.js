@@ -56,7 +56,7 @@ const imageUrl = productDetails.imageUrl
     <Row style={{ padding: "30px" }}>
       <Col span={12} style={{ padding: "20px" }}>
         <Image
-          src={imageUrl || demo_prd}
+          src={imageUrl}
           preview={false}
           style={{ height: "100%" }}
         />
@@ -73,7 +73,7 @@ const imageUrl = productDetails.imageUrl
         <MB10 />
         <Space size="middle">
           <Typography className="ez-ls-h2 black bold">
-            {productDetails.imageUrl}
+            {productDetails.title}
           </Typography>
           <Space>
             <Image src={bird_logo} preview={false} />

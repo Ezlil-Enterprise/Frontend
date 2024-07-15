@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Empty, Flex, Row, Typography } from "antd";
+import {
+  Button,
+  Col,
+  Empty,
+  Flex,
+  Image,
+  InputNumber,
+  Row,
+  Space,
+  Typography,
+} from "antd";
 import { MB20 } from "../component/widget";
 import Nodata from "../asset/image/EmptyCart.svg";
-import { getCartDetails } from "../api/cart";
+import { deleteCartItems, getCartDetails } from "../api/cart";
 import { getUserDetails } from "../api/authentication";
 import Cookies from "js-cookie";
+import product1 from "../asset/image/product.jpg";
+import { CloseOutlined } from "@ant-design/icons";
 const Cart = () => {
   const [cartData, setCartData] = useState();
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
@@ -36,16 +48,24 @@ const Cart = () => {
       console.error("Error:", error);
     }
   };
+const handledeltecart=async(id)=>{
+  try{
+    const cartItemDeleteResponse=await deleteCartItems(userToken,id);
+    console.log(cartItemDeleteResponse);
+  }catch(error){
+    console.error("Error:",error);
 
+  }
+}
   return (
     <Row className="container">
       <Col span={24} style={{ backgroundColor: "#fff", padding: "20px" }}>
         <Typography className="ez-ls-h5 ">Cart</Typography>
       </Col>
       <MB20 />
-      <Col span={24} style={{ height: "70vh", backgroundColor: "#fff" }}>
+      <Col span={24} style={{ height: "auto", backgroundColor: "#fff" }}>
         {!cartData || cartData.cartItems.length === 0 ? (
-          <Flex align="center" justify="center" style={{ height: "100%" }}>
+          <Flex align="center" justify="center" style={{ height: "70vh" }}>
             {" "}
             <Empty
               image={Nodata}
@@ -64,7 +84,52 @@ const Cart = () => {
             </Empty>
           </Flex>
         ) : (
-          <div>hello</div>
+          <Row style={{ padding: "20px" }}>
+            {cartData.cartItems.map((item) => {
+              const imageUrl = item.product.imageUrl
+                ? `http://localhost:4001/${item.product.imageUrl}`
+                : product1;
+
+              return (
+                <Col key={item._id} span={24} style={{ marginBottom: "20px" }}>
+                  <Row justify="space-evenly" align='middle'>
+                    <Col span={4}>
+                      <Image
+                        src={imageUrl}
+                        preview={false}
+                        style={{ borderRadius: "15px" }}
+                      />
+                    </Col>
+                    <Col span={8} align='center'>
+                      <Typography className="ez-ls-h5">
+                        {item.product.title}
+                      </Typography>
+                      <Typography className="ez-ls-h6">
+                        {item.product.description}
+                      </Typography>
+                    </Col>
+                    <Col span={4}>
+                    
+                        <Typography className="ez-ls-h5-b1">
+                          Rs. {item.product.price}
+                        </Typography>
+                      
+                  
+                    </Col>
+                    <Col span={4}>
+                    <InputNumber
+                          addonBefore="+"
+                          addonAfter="-"
+                          defaultValue={1}
+                        />
+                    </Col>
+                    <Col span={4} align='center'>
+                    <CloseOutlined onClick={()=> handledeltecart(item.product._id)}/></Col>
+                  </Row>
+                </Col>
+              );
+            })}
+          </Row>
         )}
       </Col>
     </Row>
