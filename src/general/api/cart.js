@@ -16,9 +16,12 @@ export const getCartDetails = async (token) => {
   }
 };
 export const addCartDetails = async (token,values) => {
-   
+  const data = {
+    productId: values._id
+};
+console.log(data);
     try {
-      const response =await axios.put("http://localhost:4001/api/cart/add",values,{
+      const response =await axios.put("http://localhost:4001/api/cart/add",data,{
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
