@@ -12,15 +12,17 @@ import {
 } from "antd";
 import { MB20 } from "../component/widget";
 import Nodata from "../asset/image/EmptyCart.svg";
-import { deleteCartItems, getCartDetails } from "../api/cart";
+import { deleteCartItems, getCartDetails, updateCartItems } from "../api/cart";
 import { getUserDetails } from "../api/authentication";
 import Cookies from "js-cookie";
 import product1 from "../asset/image/product.jpg";
 import { CloseOutlined } from "@ant-design/icons";
+
 const Cart = () => {
   const [cartData, setCartData] = useState();
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
   const [userData, setUserData] = useState();
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       if (userToken) {
@@ -28,18 +30,17 @@ const Cart = () => {
         setUserData(userInfoResponse);
         console.log(userInfoResponse);
         if (userInfoResponse) {
-          fetchcartdata();
+          fetchCartData();
         }
       }
     };
 
     fetchUserInfo();
-  }, []);
+  }, [userToken]);
 
-  const fetchcartdata = async () => {
+  const fetchCartData = async () => {
     try {
       if (userToken) {
-        console.log(userToken);
         const cartDataResponse = await getCartDetails(userToken, userData);
         console.log(cartDataResponse);
         setCartData(cartDataResponse);
@@ -48,15 +49,35 @@ const Cart = () => {
       console.error("Error:", error);
     }
   };
-const handledeltecart=async(id)=>{
-  try{
-    const cartItemDeleteResponse=await deleteCartItems(userToken,id);
-    console.log(cartItemDeleteResponse);
-  }catch(error){
-    console.error("Error:",error);
 
-  }
-}
+  const handleUpdateToCart = async (productId, quantity) => {
+    try {
+      const addToCartResponse = await updateCartItems(userToken, productId, {
+        quantity,
+      });
+
+      fetchCartData();
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+    }
+  };
+
+  const handleDeleteCart = async (id) => {
+    try {
+      const cartItemDeleteResponse = await deleteCartItems(userToken, id);
+
+      fetchCartData(); // Refresh the cart data
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleQuantityChange = (productId, newQuantity) => {
+    if (newQuantity >= 1) {
+      handleUpdateToCart(productId, newQuantity);
+    }
+  };
+
   return (
     <Row className="container">
       <Col span={24} style={{ backgroundColor: "#fff", padding: "20px" }}>
@@ -66,7 +87,6 @@ const handledeltecart=async(id)=>{
       <Col span={24} style={{ height: "auto", backgroundColor: "#fff" }}>
         {!cartData || cartData.cartItems.length === 0 ? (
           <Flex align="center" justify="center" style={{ height: "70vh" }}>
-            {" "}
             <Empty
               image={Nodata}
               imageStyle={{
@@ -79,7 +99,7 @@ const handledeltecart=async(id)=>{
               }
             >
               <Button type="primary" style={{ backgroundColor: "#158600" }}>
-                Add to Cart & Conquer Your Day!{" "}
+                Add to Cart & Conquer Your Day!
               </Button>
             </Empty>
           </Flex>
@@ -92,7 +112,8 @@ const handledeltecart=async(id)=>{
 
               return (
                 <Col key={item._id} span={24} style={{ marginBottom: "20px" }}>
-                  <Row justify="space-evenly" align='middle'>
+                  <MB20 />
+                  <Row justify="space-evenly" align="middle">
                     <Col span={4}>
                       <Image
                         src={imageUrl}
@@ -100,7 +121,7 @@ const handledeltecart=async(id)=>{
                         style={{ borderRadius: "15px" }}
                       />
                     </Col>
-                    <Col span={8} align='center'>
+                    <Col span={8} align="center">
                       <Typography className="ez-ls-h5">
                         {item.product.title}
                       </Typography>
@@ -109,22 +130,42 @@ const handledeltecart=async(id)=>{
                       </Typography>
                     </Col>
                     <Col span={4}>
-                    
-                        <Typography className="ez-ls-h5-b1">
-                          Rs. {item.product.price}
-                        </Typography>
-                      
-                  
+                      <Typography className="ez-ls-h5-b1">
+                        Rs. {item.price} {/* Show product price */}
+                      </Typography>
                     </Col>
                     <Col span={4}>
-                    <InputNumber
-                          addonBefore="+"
-                          addonAfter="-"
-                          defaultValue={1}
-                        />
+                      <InputNumber
+                        min={1}
+                        defaultValue={item.quantity}
+                        value={item.quantity}
+                        addonBefore={
+                          <Typography
+                            onClick={() =>
+                              handleQuantityChange(item._id, item.quantity + 1)
+                            }
+                            className="pointer"
+                          >
+                            +
+                          </Typography>
+                        }
+                        addonAfter={
+                          <Typography
+                            onClick={() =>
+                              handleQuantityChange(item._id, item.quantity - 1)
+                            }
+                            className="pointer"
+                          >
+                            -
+                          </Typography>
+                        }
+                      />
                     </Col>
-                    <Col span={4} align='center'>
-                    <CloseOutlined onClick={()=> handledeltecart(item.product._id)}/></Col>
+                    <Col span={4} align="center">
+                      <CloseOutlined
+                        onClick={() => handleDeleteCart(item._id)}
+                      />
+                    </Col>
                   </Row>
                 </Col>
               );

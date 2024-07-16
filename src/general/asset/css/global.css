@@ -31,7 +31,7 @@
 .btn {
   width: 40%;
 }
-.bg-btn{
+.bg-btn {
   padding: 20px 64px;
   width: 20%;
   display: flex;
@@ -54,6 +54,9 @@
   background-color: #158600 !important;
   color: white !important;
   border: 1px solid #158600 !important;
+}
+.pointer {
+  cursor: pointer;
 }
 /* .ant-image {
   height: 100%;

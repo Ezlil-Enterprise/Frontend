@@ -23,15 +23,7 @@ const Homepicbanner = () => {
                   Body Lotion
                 </Typography>
               </Col>
-              <Col
-                span={24}
-                style={{
-                  backgroundImage: `url(${Demo})`,
-                  backgroundRepeat: "no-repeat",
-                  height: "100%",
-                  backgroundPosition: "center",
-                }}
-              >
+              <Col span={24}>
                 <Typography className="ez-ls-hs1" style={{ zIndex: "-1" }}>
                   Nature Care
                 </Typography>
