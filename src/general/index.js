@@ -264,6 +264,7 @@ const GeneraIndexPage = () => {
                     minWidth: 0,
                     textAlign: "center",
                     justifyContent: "center",
+                    border:"none",
                   }}
                 />
               </Col>
