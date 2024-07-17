@@ -16,7 +16,7 @@ import { deleteCartItems, getCartDetails, updateCartItems } from "../api/cart";
 import { getUserDetails } from "../api/authentication";
 import Cookies from "js-cookie";
 import product1 from "../asset/image/product.jpg";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined,CheckCircleOutlined } from "@ant-design/icons";
 
 const Cart = () => {
   const [cartData, setCartData] = useState();
@@ -170,9 +170,21 @@ const Cart = () => {
                 </Col>
               );
             })}
+      
           </Row>
         )}
       </Col>
+      <MB20/>
+      <Col span={24} style={{backgroundColor:"#fff",padding:"20px"}}>
+
+      <Flex justify='space-between' align='center'>
+      <Typography className="ez-ls-h6 primary"><CheckCircleOutlined />Thanks for your valuable time</Typography>
+        <Typography className="ez-ls-h4">SubTotal ({cartData?.totalItems} items): Rs.{cartData?.totalPrice}</Typography>
+\
+        <Button className="colored-background bg-btn">Place Order</Button>
+      </Flex>
+        
+        </Col>
     </Row>
   );
 };

@@ -44,6 +44,7 @@ import Soaps from "./pages/products/soaps";
 import Facewash from "./pages/products/facewash";
 import Productdisplay from "./component/productdisplay";
 import Cart from "./pages/cart";
+import AddressInfo from "./pages/address";
 
 const GeneraIndexPage = () => {
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
@@ -214,18 +215,19 @@ const GeneraIndexPage = () => {
           </Typography>
         </Flex>
       </Col>
-      <Col span={24}>
+      <Col span={24} >
+      <Link to='/address_info'>
         <Flex justify="space-between">
           <Typography>
             <Space>
               <TagOutlined />
-              Copoun
+              Address
             </Space>
           </Typography>
           <Typography>
             <RightOutlined />
           </Typography>
-        </Flex>
+        </Flex></Link>
       </Col>
       <Col span={24}>
         <Flex justify="space-between">
@@ -298,6 +300,7 @@ const GeneraIndexPage = () => {
                     path="/productdetails/:id"
                     element={<Productdisplay />}
                   />
+                  <Route path="/address_info"  element={<AddressInfo/>}/>
                 </Routes>
               </Col>
             </Row>
