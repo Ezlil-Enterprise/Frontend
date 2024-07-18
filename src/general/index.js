@@ -45,6 +45,7 @@ import Facewash from "./pages/products/facewash";
 import Productdisplay from "./component/productdisplay";
 import Cart from "./pages/cart";
 import AddressInfo from "./pages/address";
+import Checkout from "./pages/checkout";
 
 const GeneraIndexPage = () => {
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
@@ -301,6 +302,7 @@ const GeneraIndexPage = () => {
                     element={<Productdisplay />}
                   />
                   <Route path="/address_info"  element={<AddressInfo/>}/>
+                  <Route path="/checkout" element={<Checkout/>}/>
                 </Routes>
               </Col>
             </Row>

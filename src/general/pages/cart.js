@@ -17,12 +17,15 @@ import { getUserDetails } from "../api/authentication";
 import Cookies from "js-cookie";
 import product1 from "../asset/image/product.jpg";
 import { CloseOutlined,CheckCircleOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+
+
 
 const Cart = () => {
   const [cartData, setCartData] = useState();
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
   const [userData, setUserData] = useState();
-
+const navigate= useNavigate();
   useEffect(() => {
     const fetchUserInfo = async () => {
       if (userToken) {
@@ -181,7 +184,7 @@ const Cart = () => {
       <Typography className="ez-ls-h6 primary"><CheckCircleOutlined />Thanks for your valuable time</Typography>
         <Typography className="ez-ls-h4">SubTotal ({cartData?.totalItems} items): Rs.{cartData?.totalPrice}</Typography>
 \
-        <Button className="colored-background bg-btn">Place Order</Button>
+        <Button className="colored-background bg-btn"  onClick={()=>navigate('/checkout')}>Place Order</Button>
       </Flex>
         
         </Col>
