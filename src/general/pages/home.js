@@ -21,10 +21,8 @@ import Link from "antd/es/typography/Link";
 import Footercomponent from "../component/card/footer";
 import { getAllProductDetails } from "../api/product";
 const HomeLanding = () => {
- 
   useEffect(() => {
     AOS.init({});
-   
   }, []);
 
   const tabitems = [
@@ -34,19 +32,9 @@ const HomeLanding = () => {
       children: <Displaycard category={"Soap"} />,
     },
     {
-      key: "face_serum",
-      label: "Face Serum",
-      children: <Displayserumcard />,
-    },
-    {
       key: "face_wash",
       label: "Face Wash",
-      children: <Displayfacewashcard />,
-    },
-    {
-      key: "face_mask",
-      label: "Face Mask",
-      children: "Content of Tab Mask",
+      children: <Displaycard category={"Face_Wash"} />,
     },
   ];
   return (

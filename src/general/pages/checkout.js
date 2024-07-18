@@ -18,6 +18,7 @@ import { MB05, MB10, MB20 } from "../component/widget";
 import { getCartDetails } from "../api/cart";
 import product1 from "../asset/image/product.jpg"; // Add a default image or import your product image here
 import { placeOrder } from "../api/order";
+import Footercomponent from "../component/card/footer";
 
 const Checkout = () => {
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
@@ -107,264 +108,294 @@ const Checkout = () => {
   };
 
   return (
-    <Row className="container">
-      <Col
-        span={24}
-        style={{ backgroundColor: "#fff", padding: "20px" }}
-        align="center"
-      >
-        <Typography className="ez-ls-h5">Checkout</Typography>
-      </Col>
-      <MB20 />
-      <Col span={24} style={{ backgroundColor: "#fff", padding: "20px" }}>
-        {!userData?.address || userData.address.length === 0 ? (
-          <Row>
-            <Col span={24}>
-              <Typography className="ez-ls-h4 ">Add address</Typography>
-            </Col>
-            <MB10 />
-            <Col span={24}>
-              <Form form={form} layout="vertical">
-                <Row gutter={[16, 16]}>
-                  <Col span={12}>
-                    <Form.Item
-                      name="name"
-                      label="Name"
-                      rules={[
-                        { required: true, message: "Please input your name" },
-                      ]}
-                    >
-                      <Input placeholder="Name" />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      name="addressLine1"
-                      label="Address Line 1"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input address line 1",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Address Line 1" />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item name="addressLine2" label="Address Line 2">
-                      <Input placeholder="Address Line 2" />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      name="city"
-                      label="City"
-                      rules={[
-                        { required: true, message: "Please input your city" },
-                      ]}
-                    >
-                      <Input placeholder="City" />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      name="state"
-                      label="State"
-                      rules={[
-                        { required: true, message: "Please input your state" },
-                      ]}
-                    >
-                      <Input placeholder="State" />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      name="zipCode"
-                      label="Postal Code"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input your postal code",
-                        },
-                      ]}
-                    >
-                      <Input
-                        placeholder="Postal Code"
-                        onChange={handlePostalCodeChange}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      name="mobile"
-                      label="Mobile"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input Mobile Numer",
-                        },
-                      ]}
-                    >
-                      <InputNumber placeholder="Phone" />
-                    </Form.Item>
-                  </Col>
-                  <Col span={4}>
-                    <Button
-                      className="transparent-background"
-                      onClick={handleSave}
-                    >
-                      Save
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            </Col>
-          </Row>
-        ) : (
-          <Row>
-            {userData.address && (
-              <Col
-                span={24}
-                style={{ backgroundColor: "#fff", padding: "20px" }}
-              >
-                <Typography className="ez-ls-h5 gray_v2">
-                  Shipping Address
-                </Typography>
-                <MB05 />
-                <Row>
-                  <Col span={12} className="custom-address-card">
-                    <Typography className="ez-ls-h5">
-                      {userData.address.name}
-                    </Typography>
-                    <Divider />
-                    <Typography className="ez-ls-h6">
-                      {userData.address.addressLine1}
-                    </Typography>
-                    <Typography className="ez-ls-h6">
-                      {userData.address.city},{addressData.state}
-                    </Typography>
-                    <Typography className="ez-ls-h6">
-                      {userData.address.zipCode}
-                    </Typography>
-                  </Col>
-                </Row>
-              </Col>
-            )}
-          </Row>
-        )}
-      </Col>
-      <MB20 />
-      {addressData && (
-        <Col span={24} style={{ backgroundColor: "#fff", padding: "20px" }}>
-          <Typography className="ez-ls-h5 gray_v2">Shipping Address</Typography>
-          <MB05 />
-          <Row>
-            <Col span={12} className="custom-address-card">
-              <Typography className="ez-ls-h5">{addressData.name}</Typography>
-              <Divider />
-              <Typography className="ez-ls-h6">
-                {addressData.addressLine1}
-              </Typography>
-              <Typography className="ez-ls-h6">
-                {addressData.city},{addressData.state}
-              </Typography>
-              <Typography className="ez-ls-h6">
-                {addressData.zipCode}
-              </Typography>
-            </Col>
-          </Row>
-        </Col>
-      )}
-      <MB20 />
-      <Col span={24} style={{ backgroundColor: "#fff" }}>
-        <Row style={{ padding: "20px" }}>
-          <Col span={24}>
-            <Typography className="ez-ls-h5 gray_v2">Ordered Items</Typography>
+    <Row>
+      <Col span={24}>
+        <Row className="container">
+          <Col
+            span={24}
+            style={{ backgroundColor: "#fff", padding: "20px" }}
+            align="center"
+          >
+            <Typography className="ez-ls-h5">Checkout</Typography>
           </Col>
-          {cartData?.cartItems?.map((item) => {
-            const imageUrl = item.product.imageUrl
-              ? `http://localhost:4001/${item.product.imageUrl}`
-              : product1;
-
-            return (
-              <Col key={item._id} span={24} style={{ marginBottom: "20px" }}>
-                <MB20 />
-                <Row justify="space-evenly" align="middle">
-                  <Col span={4}>
-                    <Image
-                      src={imageUrl}
-                      preview={false}
-                      style={{ borderRadius: "15px" }}
-                    />
-                  </Col>
-                  <Col span={8} align="center">
-                    <Typography className="ez-ls-h6">
-                      {item.product.title}
+          <MB20 />
+          <Col span={24} style={{ backgroundColor: "#fff", padding: "20px" }}>
+            {!userData?.address || userData.address.length === 0 ? (
+              <Row>
+                <Col span={24}>
+                  <Typography className="ez-ls-h4 ">Add address</Typography>
+                </Col>
+                <MB10 />
+                <Col span={24}>
+                  <Form form={form} layout="vertical">
+                    <Row gutter={[16, 16]}>
+                      <Col span={12}>
+                        <Form.Item
+                          name="name"
+                          label="Name"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input your name",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Name" />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          name="addressLine1"
+                          label="Address Line 1"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input address line 1",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Address Line 1" />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item name="addressLine2" label="Address Line 2">
+                          <Input placeholder="Address Line 2" />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          name="city"
+                          label="City"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input your city",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="City" />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          name="state"
+                          label="State"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input your state",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="State" />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          name="zipCode"
+                          label="Postal Code"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input your postal code",
+                            },
+                          ]}
+                        >
+                          <Input
+                            placeholder="Postal Code"
+                            onChange={handlePostalCodeChange}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item
+                          name="mobile"
+                          label="Mobile"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input Mobile Numer",
+                            },
+                          ]}
+                        >
+                          <InputNumber placeholder="Phone" />
+                        </Form.Item>
+                      </Col>
+                      <Col span={4}>
+                        <Button
+                          className="transparent-background"
+                          onClick={handleSave}
+                        >
+                          Save
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Col>
+              </Row>
+            ) : (
+              <Row>
+                {userData.address && (
+                  <Col
+                    span={24}
+                    style={{ backgroundColor: "#fff", padding: "20px" }}
+                  >
+                    <Typography className="ez-ls-h5 gray_v2">
+                      Shipping Address
                     </Typography>
+                    <MB05 />
+                    <Row>
+                      <Col span={12} className="custom-address-card">
+                        <Typography className="ez-ls-h5">
+                          {userData.address.name}
+                        </Typography>
+                        <Divider />
+                        <Typography className="ez-ls-h6">
+                          {userData.address.addressLine1}
+                        </Typography>
+                        <Typography className="ez-ls-h6">
+                          {userData.address.city},{addressData.state}
+                        </Typography>
+                        <Typography className="ez-ls-h6">
+                          {userData.address.zipCode}
+                        </Typography>
+                      </Col>
+                    </Row>
                   </Col>
-
-                  <Col span={4}>
-                    <Typography className="ez-ls-h7">
-                      X {item.quantity}
-                    </Typography>
-                  </Col>
-                  <Col span={4}>
-                    <Typography className="ez-ls-h7">
-                      ₹ {item.price} {/* Show product price */}
-                    </Typography>
-                  </Col>
-                </Row>
-                <MB20 />
+                )}
+              </Row>
+            )}
+          </Col>
+          <MB20 />
+          {addressData && (
+            <Col span={24} style={{ backgroundColor: "#fff", padding: "20px" }}>
+              <Typography className="ez-ls-h5 gray_v2">
+                Shipping Address
+              </Typography>
+              <MB05 />
+              <Row>
+                <Col span={12} className="custom-address-card">
+                  <Typography className="ez-ls-h5">
+                    {addressData.name}
+                  </Typography>
+                  <Divider />
+                  <Typography className="ez-ls-h6">
+                    {addressData.addressLine1}
+                  </Typography>
+                  <Typography className="ez-ls-h6">
+                    {addressData.city},{addressData.state}
+                  </Typography>
+                  <Typography className="ez-ls-h6">
+                    {addressData.zipCode}
+                  </Typography>
+                </Col>
+              </Row>
+            </Col>
+          )}
+          <MB20 />
+          <Col span={24} style={{ backgroundColor: "#fff" }}>
+            <Row style={{ padding: "20px" }}>
+              <Col span={24}>
+                <Typography className="ez-ls-h5 gray_v2">
+                  Ordered Items
+                </Typography>
               </Col>
-            );
-          })}
-          <Col span={12}></Col>
-          <Col span={12}>
-            <div style={{ display: "flex", justifyContent: "space-around" }}>
-              <Typography className="ez-ls-h6 gray_v2">
-                Items Subtotal :
-              </Typography>
-              <Typography className="ez-ls-h6 black">
-                ₹{cartData?.totalPrice}
-              </Typography>
-            </div>
-            <MB10 />
-            <div style={{ display: "flex", justifyContent: "space-around" }}>
-              <Typography className="ez-ls-h6 gray_v2">
-                Shipping Charges :
-              </Typography>
-              <Typography className="ez-ls-h6 gray_v2">
-                {cartData?.totalItems > 5 ? "Free" : `₹${shippingCharges}`}
-              </Typography>
-            </div>
+              {cartData?.cartItems?.map((item) => {
+                const imageUrl = item.product.imageUrl
+                  ? `http://localhost:4001/${item.product.imageUrl}`
+                  : product1;
 
-            <Divider />
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography className="ez-ls-h6">Total :</Typography>
-              <Typography className="ez-ls-h5 black">
-                ₹
-                {cartData?.totalItems > 5
-                  ? cartData?.totalPrice
-                  : cartData?.totalPrice + shippingCharges}
-              </Typography>
-            </div>
-            <MB05 />
-            <Button
-              style={{ width: "100%" }}
-              disabled={
-                (!userData?.address || userData.address.length === 0) &&
-                !addressData
-                  ? true
-                  : false
-              }
-              className="colored-background"
-              onClick={handlePlaceOrder}
-            >
-              Place Order
-            </Button>
+                return (
+                  <Col
+                    key={item._id}
+                    span={24}
+                    style={{ marginBottom: "20px" }}
+                  >
+                    <MB20 />
+                    <Row justify="space-evenly" align="middle">
+                      <Col span={4}>
+                        <Image
+                          src={imageUrl}
+                          preview={false}
+                          style={{ borderRadius: "15px" }}
+                        />
+                      </Col>
+                      <Col span={8} align="center">
+                        <Typography className="ez-ls-h6">
+                          {item.product.title}
+                        </Typography>
+                      </Col>
+
+                      <Col span={4}>
+                        <Typography className="ez-ls-h7">
+                          X {item.quantity}
+                        </Typography>
+                      </Col>
+                      <Col span={4}>
+                        <Typography className="ez-ls-h7">
+                          ₹ {item.price} {/* Show product price */}
+                        </Typography>
+                      </Col>
+                    </Row>
+                    <MB20 />
+                  </Col>
+                );
+              })}
+              <Col span={12}></Col>
+              <Col span={12}>
+                <div
+                  style={{ display: "flex", justifyContent: "space-around" }}
+                >
+                  <Typography className="ez-ls-h6 gray_v2">
+                    Items Subtotal :
+                  </Typography>
+                  <Typography className="ez-ls-h6 black">
+                    ₹{cartData?.totalPrice}
+                  </Typography>
+                </div>
+                <MB10 />
+                <div
+                  style={{ display: "flex", justifyContent: "space-around" }}
+                >
+                  <Typography className="ez-ls-h6 gray_v2">
+                    Shipping Charges :
+                  </Typography>
+                  <Typography className="ez-ls-h6 gray_v2">
+                    {cartData?.totalItems > 5 ? "Free" : `₹${shippingCharges}`}
+                  </Typography>
+                </div>
+
+                <Divider />
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography className="ez-ls-h6">Total :</Typography>
+                  <Typography className="ez-ls-h5 black">
+                    ₹
+                    {cartData?.totalItems > 5
+                      ? cartData?.totalPrice
+                      : cartData?.totalPrice + shippingCharges}
+                  </Typography>
+                </div>
+                <MB05 />
+                <Button
+                  style={{ width: "100%" }}
+                  disabled={
+                    (!userData?.address || userData.address.length === 0) &&
+                    !addressData
+                      ? true
+                      : false
+                  }
+                  className="colored-background"
+                  onClick={handlePlaceOrder}
+                >
+                  Place Order
+                </Button>
+              </Col>
+            </Row>
           </Col>
         </Row>
+        <Footercomponent />
       </Col>
     </Row>
   );

@@ -147,7 +147,8 @@ const GeneraIndexPage = () => {
     { key: "home", label: <Link to="/">Home</Link> },
     { key: "face-wash", label: <Link to="/facewash">Face Wash</Link> },
     { key: "soap", label: <Link to="/soaps">Soap</Link> },
-    { key: "face-mask", label: "Face Mask" },
+    { key: "about", label: <Link to="/about">About</Link> },
+    { key: "contact", label: <Link to="/contact">Contact</Link> },
   ];
 
   const userMenu = (
@@ -216,19 +217,20 @@ const GeneraIndexPage = () => {
           </Typography>
         </Flex>
       </Col>
-      <Col span={24} >
-      <Link to='/address_info'>
-        <Flex justify="space-between">
-          <Typography>
-            <Space>
-              <TagOutlined />
-              Address
-            </Space>
-          </Typography>
-          <Typography>
-            <RightOutlined />
-          </Typography>
-        </Flex></Link>
+      <Col span={24}>
+        <Link to="/address_info">
+          <Flex justify="space-between">
+            <Typography>
+              <Space>
+                <TagOutlined />
+                Address
+              </Space>
+            </Typography>
+            <Typography>
+              <RightOutlined />
+            </Typography>
+          </Flex>
+        </Link>
       </Col>
       <Col span={24}>
         <Flex justify="space-between">
@@ -267,7 +269,7 @@ const GeneraIndexPage = () => {
                     minWidth: 0,
                     textAlign: "center",
                     justifyContent: "center",
-                    border:"none",
+                    border: "none",
                   }}
                 />
               </Col>
@@ -301,8 +303,8 @@ const GeneraIndexPage = () => {
                     path="/productdetails/:id"
                     element={<Productdisplay />}
                   />
-                  <Route path="/address_info"  element={<AddressInfo/>}/>
-                  <Route path="/checkout" element={<Checkout/>}/>
+                  <Route path="/address_info" element={<AddressInfo />} />
+                  <Route path="/checkout" element={<Checkout />} />
                 </Routes>
               </Col>
             </Row>
