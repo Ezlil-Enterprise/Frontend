@@ -41,7 +41,7 @@ import Home from "./pages/home";
 import HomeLanding from "./pages/home";
 import Orders from "./pages/orders";
 import Soaps from "./pages/products/soaps";
-import Facewash from "./pages/products/facewash";
+import Facewash from "./pages/products/shampoo";
 import Productdisplay from "./component/productdisplay";
 import Cart from "./pages/cart";
 import AddressInfo from "./pages/address";
@@ -145,7 +145,7 @@ const GeneraIndexPage = () => {
   };
   const menuitems = [
     { key: "home", label: <Link to="/">Home</Link> },
-    { key: "face-wash", label: <Link to="/facewash">Face Wash</Link> },
+    { key: "shampoo", label: <Link to="/shampoo">Shampoo</Link> },
     { key: "soap", label: <Link to="/soaps">Soap</Link> },
     { key: "about", label: <Link to="/about">About</Link> },
     { key: "contact", label: <Link to="/contact">Contact</Link> },
@@ -294,11 +294,11 @@ const GeneraIndexPage = () => {
             <Row>
               <Col span={24}>
                 <Routes basepath="/">
-                  <Route path="/*" element={<HomeLanding />} />
+                  <Route path="/" element={<HomeLanding />} />
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/cart" element={<Cart />} />
                   <Route path="/soaps" element={<Soaps />} />
-                  <Route path="/facewash" element={<Facewash />} />
+                  <Route path="/shampoo" element={<Facewash />} />
                   <Route
                     path="/productdetails/:id"
                     element={<Productdisplay />}

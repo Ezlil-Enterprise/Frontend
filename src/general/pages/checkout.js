@@ -214,7 +214,7 @@ const Checkout = () => {
                           rules={[
                             {
                               required: true,
-                              message: "Please input Mobile Numer",
+                              message: "Please input Mobile Number",
                             },
                           ]}
                         >
@@ -254,7 +254,8 @@ const Checkout = () => {
                           {userData.address.addressLine1}
                         </Typography>
                         <Typography className="ez-ls-h6">
-                          {userData.address.city},{addressData.state}
+                          {userData.address.city},
+                          {userData.address.state}
                         </Typography>
                         <Typography className="ez-ls-h6">
                           {userData.address.zipCode}

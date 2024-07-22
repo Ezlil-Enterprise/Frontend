@@ -3,7 +3,7 @@ import axios from "axios";
 export const getAllCategoryDetails = async (token) => {
   try {
     const response = await axios.get(
-      "http://localhost:4001/api/category/category",
+      "http://localhost:4001/api/category/",
       {
         headers: {
           Authorization: `Bearer ${token}`,

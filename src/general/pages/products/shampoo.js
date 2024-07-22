@@ -13,7 +13,7 @@ const Facewash = () => {
         <Row className="container">
           <Col span={24}>
             <Typography className="ez-ls-h2 bold">
-              Ezlil's Natural Face Wash
+              Ezlil's Natural Shampoo
             </Typography>
           </Col>
           <MB20 />
@@ -29,14 +29,14 @@ const Facewash = () => {
                   title: <span>Collection</span>,
                 },
                 {
-                  title: "Face Wash",
+                  title: "Shampoo",
                 },
               ]}
             />
           </Col>
           <MB20 />
           <Col span={24}>
-            <Displaycard category={"Face_Wash"} />
+            <Displaycard category={"Shampoo"} />
           </Col>
         </Row>
         <Footercomponent />

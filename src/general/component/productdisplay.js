@@ -19,6 +19,7 @@ import { MB05, MB10, MB20 } from "./widget";
 import "../asset/less/productdetails.less";
 import { addCartDetails } from "../api/cart";
 import Cookies from 'js-cookie';
+import Footercomponent from "./card/footer";
 
 const Productdisplay = () => {
   const { id } = useParams();
@@ -53,6 +54,8 @@ const imageUrl = productDetails.imageUrl
 ? `http://localhost:4001/${productDetails.imageUrl}`
 : demo_prd;
   return (
+    <Row>
+      <Col span={24}>
     <Row style={{ padding: "30px" }}>
       <Col span={12} style={{ padding: "20px" }}>
         <Image
@@ -117,6 +120,9 @@ const imageUrl = productDetails.imageUrl
             Add to Cart
           </Button>
         </Flex>
+      </Col>
+    </Row>
+    <Footercomponent />
       </Col>
     </Row>
   );

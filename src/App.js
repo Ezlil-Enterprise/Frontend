@@ -13,11 +13,11 @@ const App = () => {
       <MainLayout>
         <Routes>
           <Route path="/*" element={<GeneraIndexPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/admin/products" element={<Product />} />
-          <Route path="/admin/customers" element={<Customer />} />
-          <Route path="/admin/orders" element={<Orders />} />
-          <Route path="/admin/category" element={<Category />} />
+          <Route path="/dashboard/*" element={<Dashboard />} />
+          <Route path="/admin/products/*" element={<Product />} />
+          <Route path="/admin/customers/*" element={<Customer />} />
+          <Route path="/admin/orders/*" element={<Orders />} />
+          <Route path="/admin/category/*" element={<Category />} />
         </Routes>
       </MainLayout>
     </BrowserRouter>

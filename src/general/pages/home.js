@@ -32,9 +32,9 @@ const HomeLanding = () => {
       children: <Displaycard category={"Soap"} />,
     },
     {
-      key: "face_wash",
-      label: "Face Wash",
-      children: <Displaycard category={"Face_Wash"} />,
+      key: "shampoo",
+      label: "Shampoo",
+      children: <Displaycard category={"Shampoo"} />,
     },
   ];
   return (
