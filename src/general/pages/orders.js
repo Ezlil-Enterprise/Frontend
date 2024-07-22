@@ -80,10 +80,10 @@ const Orders = () => {
                     {" "}
                     <Typography>{formatDate(order.orderDate)}</Typography>
                   </Flex>
-                  {order.orderItems.map((item) => {
-                    const imageUrl = item.product.imageUrl
+                  {order.orderItems?.map((item) => {
+                    const imageUrl = item.product?.imageUrl
                       ? `http://localhost:4001/${item.product.imageUrl}`
-                      : "defaultProductImagePath"; // replace 'defaultProductImagePath' with the path of a default product image if needed
+                      : "defaultProductImagePath"; 
 
                     return (
                       <Row key={item._id} style={{ marginBottom: "20px" }}>
@@ -93,13 +93,13 @@ const Orders = () => {
                               width={80}
                               height={80}
                               src={imageUrl}
-                              alt={item.product.name}
+                              alt={item.product?.name}
                               preview={false}
                               style={{ borderRadius: "10px" }}
                             />
 
                             <Typography className="ez-ls-h6">
-                              {item.product.name}
+                              {item.product?.name}
                             </Typography>
                             <Typography>Price: ₹{item.price}</Typography>
                             <Typography>

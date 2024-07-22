@@ -34,7 +34,6 @@ const Checkout = () => {
       if (userToken) {
         const userInfoResponse = await getUserDetails(userToken);
         setUserData(userInfoResponse);
-        console.log(userInfoResponse);
       }
     };
 
@@ -245,22 +244,24 @@ const Checkout = () => {
                     </Typography>
                     <MB05 />
                     <Row>
-                      <Col span={12} className="custom-address-card">
+                    {userData.address.map((address, index) => (
+                      <Col span={12} className="custom-address-card" key={index}>
                         <Typography className="ez-ls-h5">
-                          {userData.address.name}
+                          {address.name}
                         </Typography>
                         <Divider />
                         <Typography className="ez-ls-h6">
-                          {userData.address.addressLine1}
+                          {address.addressLine1}
                         </Typography>
                         <Typography className="ez-ls-h6">
-                          {userData.address.city},
-                          {userData.address.state}
+                          {address.city},
+                          {address.state}
                         </Typography>
                         <Typography className="ez-ls-h6">
-                          {userData.address.zipCode}
+                          {address.zipCode}
                         </Typography>
                       </Col>
+                        ))}
                     </Row>
                   </Col>
                 )}
