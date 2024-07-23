@@ -14,3 +14,20 @@ export const getAllOrders = async (token) => {
     throw error;
   }
 };
+
+export const deleteOrderByID = async (token, id) => {
+  try {
+    const response = await axios.delete(
+      `http://localhost:4001/api/admin/order/${id}/delete`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "applicatio.json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

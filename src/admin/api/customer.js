@@ -11,9 +11,7 @@ export const getCustomerDetails = async () => {
 };
 export const getCustomerDetailsByID = async (id) => {
   try {
-    const response = await axios.get(
-      `http://localhost:4001/api/customers/${id}`
-    );
+    const response = await axios.get(`http://localhost:4001/api/users/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching customer details:", error);

@@ -41,3 +41,12 @@ export const getUserDetails = async (token) => {
     throw error;
   }
 };
+export const getUserDetailsByID = async (id) => {
+  try {
+    const response = await axios.get(`http://localhost:4001/api/users/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+    throw error;
+  }
+};
