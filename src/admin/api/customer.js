@@ -32,8 +32,8 @@ export const addCustomerData = async (formData) => {
 };
 export const updateCustomerDetails = async (id, values) => {
   try {
-    const response = await axios.patch(
-      `http://localhost:4001/api/customers/${id}`,
+    const response = await axios.put(
+      `http://localhost:4001/api/users/${id}`,
       values
     );
     return response.data;
@@ -45,7 +45,7 @@ export const updateCustomerDetails = async (id, values) => {
 export const deleteCustomerByID = async (id) => {
   try {
     const response = await axios.delete(
-      `http://localhost:4001/api/customers/${id}`
+      `http://localhost:4001/api/users/${id}`
     );
     return response.data;
   } catch (error) {

@@ -36,7 +36,6 @@ const OrdersListPage = () => {
             })
           );
           setOrdersData(ordersWithUserDetails);
-          console.log(ordersWithUserDetails);
         }
         setLoading(false);
       } catch (error) {
@@ -52,7 +51,7 @@ const OrdersListPage = () => {
       title: "Name",
       dataIndex: ["user", "firstName"],
       render: (text, record) => (
-        <a onClick={() => handleUpdateCustomer(record)}>{text}</a>
+        <a onClick={() => handleUpdateOrder(record)}>{text}</a>
       ),
     },
     {
@@ -80,7 +79,9 @@ const OrdersListPage = () => {
       render: (record) => {
         switch (record) {
           case "CONFIRMED":
-            return <Tag color="green">CONFIRMED</Tag>;
+            return <Tag color="blue">CONFIRMED</Tag>;
+          case "PLACED":
+            return <Tag color="pink">PLACED</Tag>;
           case "SHIPPED":
             return <Tag color="gold">SHIPPED</Tag>;
           case "DELIVERED":
@@ -106,17 +107,19 @@ const OrdersListPage = () => {
   const handleAddCustomers = () => {
     navigate("/admin/customers/addcustomer");
   };
-  const handleUpdateCustomer = (record) => {
-    navigate(`/admin/customers/updatecustomer/${record._id}`);
+  const handleUpdateOrder = (record) => {
+    navigate(`/admin/orders/updateorder/${record._id}`, {
+      state: { order: record },
+    });
   };
   const handleDeleteOrder = async (id) => {
     try {
       await deleteOrderByID(userToken, id);
-      message.success("customer deleted successfully");
+      message.success("order deleted successfully");
       setOrdersData(ordersData.filter((order) => order._id !== id));
     } catch (error) {
-      console.error("Error deleting customer:", error);
-      message.error("Failed to delete customer");
+      console.error("Error deleting order:", error);
+      message.error("Failed to delete order");
     }
   };
   const rowSelection = {

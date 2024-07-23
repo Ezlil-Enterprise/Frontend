@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const placeOrder = async (token, { addressData }) => {
-  console.log(addressData);
   try {
     const response = await axios.post(
       "http://localhost:4001/api/order/",
@@ -27,7 +26,7 @@ export const orderHistory = async (token) => {
         "Content-Type": "application/json",
       },
     });
-    console.log(response.data);
+
     return response.data;
   } catch (error) {
     console.error("Error fetching cart details:", error);
