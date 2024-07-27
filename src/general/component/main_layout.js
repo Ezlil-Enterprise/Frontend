@@ -12,37 +12,37 @@ import LeftMenu from "../../admin/components/left_menu.js";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { getUserDetails } from "../api/authentication.js";
+
 const { Header, Content } = Layout;
 
 const MainLayout = ({ children }) => {
   const dispatch = useDispatch();
-  const userDetails = useSelector((state) => state.user.userInfo);
-  const [userEmail, setUserEmail] = useState(Cookies.get("user_token"));
+  const userInfo = useSelector((state) => state.user.userInfo);
+  const userToken = Cookies.get("user_token");
 
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (userEmail) {
-        const userInfoResponse = await getUserDetails(userEmail);
+      if (userToken) {
+        const userInfoResponse = await getUserDetails(userToken);
         dispatch(setUser(userInfoResponse));
       }
     };
 
     fetchUserInfo();
-  }, [location.pathname, userEmail]);
+  }, [location.pathname, userToken, dispatch]);
 
   const handleLogout = () => {
     Cookies.remove("user_token");
-    setUserEmail(null);
     dispatch(logout());
     navigate("/");
   };
 
   return (
     <>
-      {userDetails?.role === "SuperAdmin" ? (
+      {userInfo?.role === "SuperAdmin" ? (
         <Layout className="main-layout">
           <LeftMenu />
           <Layout className="main-right">

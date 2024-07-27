@@ -7,6 +7,7 @@ import Customer from "./admin/pages/customer/index";
 import Dashboard from "./admin/pages/dashboard/index";
 import Orders from "./admin/pages/orders";
 import Category from "./admin/pages/category";
+import Transaction from "./admin/pages/transactiom";
 const App = () => {
   return (
     <BrowserRouter>
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/admin/customers/*" element={<Customer />} />
           <Route path="/admin/orders/*" element={<Orders />} />
           <Route path="/admin/category/*" element={<Category />} />
+          <Route path="/admin/transactions/*" element={<Transaction />} />
         </Routes>
       </MainLayout>
     </BrowserRouter>

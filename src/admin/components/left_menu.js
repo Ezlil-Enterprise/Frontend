@@ -1,6 +1,6 @@
-import { Image, Menu } from "antd";
+import { Image, Menu, Spin } from "antd";
 import Sider from "antd/es/layout/Sider";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TransactionOutlined,
   CustomerServiceOutlined,
@@ -12,16 +12,45 @@ import {
   LogoutOutlined,
   BuildOutlined,
 } from "@ant-design/icons";
+import { MB05 } from "../../general/component/widget";
+import Logo from "../../general/asset/image/logo.png";
 import "../asset/less/left_menu.less";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
+import { getUserDetails } from "../../general/api/authentication";
+
 const LeftMenu = () => {
-  const [selectedKey, setSelectedKey] = useState("0");
   const navigate = useNavigate();
-  let role = "Super Admin";
+  const location = useLocation();
+  const [selectedKey, setSelectedKey] = useState("0");
+  const [userToken, setUserToken] = useState(Cookies.get("user_token"));
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (userToken) {
+        const userInfoResponse = await getUserDetails(userToken);
+        setUserInfo(userInfoResponse);
+      }
+    };
+
+    fetchUserInfo();
+  }, [location.pathname, userToken]);
+
+  useEffect(() => {
+    const currentItem = menuItems.find((item) =>
+      location.pathname.includes(item.link)
+    );
+    if (currentItem) {
+      setSelectedKey(currentItem.key);
+    }
+  }, [location.pathname]);
+
+  const role = userInfo?.role;
+
   const allowedMenuItems = {
-    "Super Admin": ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
-    Admin: ["0", "1", "2", "3", "6"],
-    User: ["0", "1", "2", "3", "6"],
+    SuperAdmin: ["0", "1", "2", "3", "4", "5"],
+    Admin: ["0", "1", "2", "3"],
   };
 
   const menuItems = [
@@ -37,7 +66,6 @@ const LeftMenu = () => {
       label: "Products",
       link: "/admin/products",
     },
-
     {
       key: "2",
       icon: <ShoppingCartOutlined style={{ fontSize: "1.4em" }} />,
@@ -56,12 +84,11 @@ const LeftMenu = () => {
       label: "Category",
       link: "/admin/category",
     },
-
     {
       key: "5",
       icon: <TransactionOutlined style={{ fontSize: "1.4em" }} />,
       label: "Transcation",
-      link: "",
+      link: "/admin/transactions",
     },
     {
       key: "6",
@@ -75,17 +102,27 @@ const LeftMenu = () => {
       label: "Support",
       link: "",
     },
-    {
-      key: "8",
-      icon: <LogoutOutlined style={{ fontSize: "1.4em" }} />,
-      label: "Logout",
-      link: "",
-    },
   ];
+
   const handleMenuItemClick = (key) => {
     setSelectedKey(key);
     navigate(menuItems.find((item) => item.key === key).link);
   };
+
+  if (!role) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <Sider
@@ -96,13 +133,11 @@ const LeftMenu = () => {
       collapsedWidth={70}
       style={{
         boxShadow: " rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-        height: "200vh",
+        height: "100vh",
       }}
     >
-      <Image
-        src="./images/logo.png"
-        style={{ width: "65px", height: "64px" }}
-      />
+      <Image src={Logo} className="logo" preview={false} />
+      <MB05 />
       <Menu
         mode="inline"
         selectedKeys={[selectedKey]}

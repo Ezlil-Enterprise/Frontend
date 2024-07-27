@@ -1,7 +1,9 @@
 import {
+  Breadcrumb,
   Button,
   Col,
   Flex,
+  Popconfirm,
   Row,
   Select,
   Table,
@@ -10,9 +12,10 @@ import {
 } from "antd";
 import Search from "antd/es/transfer/search";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import { deleteCustomerByID, getCustomerDetails } from "../../api/customer";
 import { useNavigate } from "react-router-dom";
+import { MB05 } from "../../../general/component/widget";
 
 const CustomerListPage = () => {
   const [customerData, setCustomerData] = useState([]);
@@ -77,10 +80,16 @@ const CustomerListPage = () => {
       title: "Action",
       dataIndex: "action",
       render: (_, record) => (
-        <DeleteOutlined
-          style={{ color: "#ff0000" }}
-          onClick={() => handleDeleteCustomer(record._id)}
-        />
+        <Popconfirm
+          placement="topLeft"
+          title="Are you sure to delete this category?"
+          description="Delete the task"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={() => handleDeleteCustomer(record._id)}
+        >
+          <DeleteOutlined style={{ color: "#ff0000" }} />
+        </Popconfirm>
       ),
     },
   ];
@@ -100,19 +109,36 @@ const CustomerListPage = () => {
       message.error("Failed to delete customer");
     }
   };
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-  };
+  // const rowSelection = {
+  //   onChange: (selectedRowKeys, selectedRows) => {
+  //     console.log(
+  //       `selectedRowKeys: ${selectedRowKeys}`,
+  //       "selectedRows: ",
+  //       selectedRows
+  //     );
+  //   },
+  // };
   return (
-    <Row gutter={[16, 16]} style={{ padding: "15px" }}>
+    <Row gutter={[16, 16]} className="common-padding">
       <Col span={24}>
-        <Typography>customer List</Typography>
+        <Typography className="ez-ls-h4 bold">Customers</Typography>
+        <MB05 />
+        <Breadcrumb
+          items={[
+            {
+              href: "/dashboard",
+              title: (
+                <>
+                  <UserOutlined />
+                  <span>Admin</span>
+                </>
+              ),
+            },
+            {
+              title: "Customers",
+            },
+          ]}
+        />
       </Col>
       <Col span={24}>
         <Row
@@ -158,13 +184,13 @@ const CustomerListPage = () => {
           <Col span={24}>
             <Table
               columns={customerColumn}
-              rowSelection={{
-                type: "checkbox",
-                ...rowSelection,
-              }}
+              // rowSelection={{
+              //   type: "checkbox",
+              //   ...rowSelection,
+              // }}
               dataSource={customerData}
               loading={loading}
-              rowKey="SKU"
+              rowKey="email"
             />
           </Col>
         </Row>

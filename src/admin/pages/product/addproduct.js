@@ -9,15 +9,19 @@ import {
   Upload,
   Button,
   Space,
+  Breadcrumb,
+  Typography,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import "../../asset/less/addproduct.less";
-import { InboxOutlined } from "@ant-design/icons";
+import { InboxOutlined, UserOutlined } from "@ant-design/icons";
 import { addProductData } from "../../api/product";
 import { getAllCategoryDetails } from "../../api/category";
 import Cookies from "js-cookie";
+import { MB05 } from "../../../general/component/widget";
+import { useNavigate } from "react-router-dom";
 const { Option } = Select;
 const { Dragger } = Upload;
 
@@ -26,6 +30,8 @@ const Addproduct = () => {
   const [fileList, setFileList] = useState([]);
   const [categoryData, setCatergoryData] = useState([]);
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const selectAfter = (
     <Select
       defaultValue="g"
@@ -62,6 +68,7 @@ const Addproduct = () => {
   };
 
   const onFinish = async (values) => {
+    setLoading(true);
     try {
       const formData = new FormData();
       for (const key in values) {
@@ -96,11 +103,35 @@ const Addproduct = () => {
         message.error(`Failed to create product: ${error.message}`);
       }
     }
+    setLoading(false);
   };
 
   return (
-    <Row gutter={[16, 16]} style={{ padding: "15px" }}>
-      <Col span={24}>Add Products</Col>
+    <Row gutter={[16, 16]} className="common-padding">
+      <Col span={24}>
+        <Typography className="ez-ls-h4 bold">Product</Typography>
+        <MB05 />
+        <Breadcrumb
+          items={[
+            {
+              href: "/dashboard",
+              title: (
+                <>
+                  <UserOutlined />
+                  <span>Admin</span>
+                </>
+              ),
+            },
+            {
+              href: "/admin/products",
+              title: "Product",
+            },
+            {
+              title: "Add",
+            },
+          ]}
+        />
+      </Col>
       <Col
         span={24}
         style={{
@@ -342,10 +373,12 @@ const Addproduct = () => {
             </Col>
             <Col span={24}>
               <Space>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" loading={loading}>
                   Add
                 </Button>
-                <Button danger>Cancel</Button>
+                <Button danger onClick={() => navigate("/admin/products")}>
+                  Cancel
+                </Button>
               </Space>
             </Col>
           </Row>

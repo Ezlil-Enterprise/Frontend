@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, Carousel, Col, Row, Image, Typography } from "antd";
-import Demo from "../asset/image/demo_product.png";
+import { Button, Carousel, Col, Row, Typography } from "antd";
 import "../asset/less/typography-ls.less";
 import "../asset/css/global.css";
 import { MB10 } from "./widget";

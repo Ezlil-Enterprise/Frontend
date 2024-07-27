@@ -9,18 +9,24 @@ import {
   Space,
   Typography,
   InputNumber,
+  Breadcrumb,
 } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import "../../asset/less/addproduct.less";
+import { UserOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { addCustomerData } from "../../api/customer";
+import { MB05 } from "../../../general/component/widget";
+import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 
 const Addcustomer = () => {
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-
+  const navigate = useNavigate();
   const onFinish = async (values) => {
+    setLoading(true);
     try {
       const addCustomerDataResponse = await addCustomerData(values);
       if (addCustomerDataResponse) {
@@ -42,6 +48,7 @@ const Addcustomer = () => {
         message.error(`Failed to create customer: ${error.message}`);
       }
     }
+    setLoading(false);
   };
 
   const handlePostalCodeChange = async (e) => {
@@ -74,8 +81,31 @@ const Addcustomer = () => {
   };
 
   return (
-    <Row gutter={[16, 16]} style={{ padding: "15px" }}>
-      <Col span={24}>Add customer</Col>
+    <Row gutter={[16, 16]} className="common-padding">
+      <Col span={24}>
+        <Typography className="ez-ls-h4 bold">Customer</Typography>
+        <MB05 />
+        <Breadcrumb
+          items={[
+            {
+              href: "/dashboard",
+              title: (
+                <>
+                  <UserOutlined />
+                  <span>Admin</span>
+                </>
+              ),
+            },
+            {
+              href: "/admin/customers",
+              title: "Customer",
+            },
+            {
+              title: "Add",
+            },
+          ]}
+        />
+      </Col>
       <Col
         span={24}
         style={{
@@ -303,10 +333,12 @@ const Addcustomer = () => {
             </Col>
             <Col span={24}>
               <Space>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" loading={loading}>
                   Create
                 </Button>
-                <Button danger>Cancel</Button>
+                <Button danger onClick={() => navigate("/admin/customers")}>
+                  Cancel
+                </Button>
               </Space>
             </Col>
           </Row>

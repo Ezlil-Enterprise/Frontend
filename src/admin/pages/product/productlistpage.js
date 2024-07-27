@@ -1,8 +1,10 @@
 import {
+  Breadcrumb,
   Button,
   Checkbox,
   Col,
   Flex,
+  Popconfirm,
   Row,
   Select,
   Table,
@@ -11,14 +13,10 @@ import {
 } from "antd";
 import Search from "antd/es/transfer/search";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import {
-  deleteProductByID,
-  getAllProductDetails,
-  getProductDetails,
-} from "../../api/product";
+import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
+import { deleteProductByID, getAllProductDetails } from "../../api/product";
 import { Form, useNavigate } from "react-router-dom";
-import { getAllCategoryDetails } from "../../api/category";
+import { MB05, MB10 } from "../../../general/component/widget";
 import Cookies from "js-cookie";
 
 const ProductListPage = () => {
@@ -107,10 +105,16 @@ const ProductListPage = () => {
       title: "Action",
       dataIndex: "action",
       render: (_, record) => (
-        <DeleteOutlined
-          style={{ color: "#ff0000" }}
-          onClick={() => handleDeleteProduct(record._id)}
-        />
+        <Popconfirm
+          placement="topLeft"
+          title="Are you sure to delete this category?"
+          description="Delete the task"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={() => handleDeleteProduct(record._id)}
+        >
+          <DeleteOutlined style={{ color: "#ff0000" }} />
+        </Popconfirm>
       ),
     },
   ];
@@ -130,19 +134,36 @@ const ProductListPage = () => {
       message.error("Failed to delete product");
     }
   };
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-  };
+  // const rowSelection = {
+  //   onChange: (selectedRowKeys, selectedRows) => {
+  //     console.log(
+  //       `selectedRowKeys: ${selectedRowKeys}`,
+  //       "selectedRows: ",
+  //       selectedRows
+  //     );
+  //   },
+  // };
   return (
-    <Row gutter={[16, 16]} style={{ padding: "15px" }}>
+    <Row gutter={[16, 16]} className="common-padding">
       <Col span={24}>
-        <Typography>Product List</Typography>
+        <Typography className="ez-ls-h4 bold">Products</Typography>
+        <MB05 />
+        <Breadcrumb
+          items={[
+            {
+              href: "/dashboard",
+              title: (
+                <>
+                  <UserOutlined />
+                  <span>Admin</span>
+                </>
+              ),
+            },
+            {
+              title: "Products",
+            },
+          ]}
+        />
       </Col>
       <Col span={24}>
         <Row
@@ -188,10 +209,10 @@ const ProductListPage = () => {
           <Col span={24}>
             <Table
               columns={productColumn}
-              rowSelection={{
-                type: "checkbox",
-                ...rowSelection,
-              }}
+              // rowSelection={{
+              //   type: "checkbox",
+              //   ...rowSelection,
+              // }}
               dataSource={productData}
               loading={loading}
               rowKey="title"

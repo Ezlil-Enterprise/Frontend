@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Col,
   Form,
@@ -10,18 +10,22 @@ import {
   Space,
   Typography,
   InputNumber,
+  Breadcrumb,
 } from "antd";
 import "../../asset/less/addproduct.less";
+import { UserOutlined } from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   getCustomerDetailsByID,
   updateCustomerDetails,
 } from "../../api/customer";
+import { MB05 } from "../../../general/component/widget";
 
 const { Option } = Select;
 
 const UpdateCustomer = () => {
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -61,12 +65,14 @@ const UpdateCustomer = () => {
     fetchProduct();
   }, [id, form]);
   const onFinish = async (values) => {
+    setLoading(true);
     try {
       const updateProductDataResponse = await updateCustomerDetails(id, values);
 
       if (updateProductDataResponse) {
         message.success("Product updated successfully!");
-        navigate("/customers");
+        form.resetFields();
+        navigate("/admin/customers");
       }
     } catch (error) {
       if (error.response) {
@@ -81,6 +87,7 @@ const UpdateCustomer = () => {
         message.error(`Failed to update product: ${error.message}`);
       }
     }
+    setLoading(false);
   };
 
   const handlePostalCodeChange = async (e) => {
@@ -113,8 +120,31 @@ const UpdateCustomer = () => {
   };
 
   return (
-    <Row gutter={[16, 16]} style={{ padding: "15px" }}>
-      <Col span={24}>Update customer</Col>
+    <Row gutter={[16, 16]} className="common-padding">
+      <Col span={24}>
+        <Typography className="ez-ls-h4 bold">Customer</Typography>
+        <MB05 />
+        <Breadcrumb
+          items={[
+            {
+              href: "/dashboard",
+              title: (
+                <>
+                  <UserOutlined />
+                  <span>Admin</span>
+                </>
+              ),
+            },
+            {
+              href: "/admin/customers",
+              title: "Customer",
+            },
+            {
+              title: "Update",
+            },
+          ]}
+        />
+      </Col>
       <Col
         span={24}
         style={{
@@ -342,10 +372,12 @@ const UpdateCustomer = () => {
             </Col>
             <Col span={24}>
               <Space>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" loading={loading}>
                   Update
                 </Button>
-                <Button danger>Cancel</Button>
+                <Button danger onClick={() => navigate("/admin/customers")}>
+                  Cancel
+                </Button>
               </Space>
             </Col>
           </Row>

@@ -8,6 +8,10 @@
 .container {
   padding: 60px;
 }
+.logo {
+  height: 64px !important;
+  width: 64px !important;
+}
 .arrow-icon {
   height: 14px;
   width: 14px;
@@ -58,15 +62,15 @@
 .pointer {
   cursor: pointer;
 }
-.custom-address-card{
+.custom-address-card {
   border: #87ea5d 2px solid;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border-radius: 10px;
   padding: 20px;
 }
-.box-shadow{
- box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+.box-shadow {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
-/* .ant-image {
-  height: 100%;
-} */
+.common-padding {
+  padding: 30px;
+}

@@ -18,7 +18,7 @@ import {
 } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../store/reducers/user";
+import { setUser, logout } from "../store/reducers/user";
 import { Link, useNavigate, Route, Routes } from "react-router-dom";
 import {
   SearchOutlined,
@@ -33,6 +33,7 @@ import "./asset/less/authentication.less";
 import {
   getUserDetails,
   getUserDetailsByEmail,
+  getUserDetailsByID,
   userSignin,
   userSignup,
 } from "./api/authentication";
@@ -74,20 +75,26 @@ const GeneraIndexPage = () => {
   const handleSignUp = async () => {
     try {
       const values = await signUpForm.validateFields();
-
       const userSignUpResponse = await userSignup(values);
       if (userSignUpResponse) {
         message.success("Signup successful!");
-        Cookies.set("user_token", userSignUpResponse.email, {
+        Cookies.set("user_token", userSignUpResponse.data.jwt, {
           expires: 7,
           secure: false,
           sameSite: "Lax",
         });
 
+        const userDetailsResponse = await getUserDetailsByID(
+          userSignUpResponse.data.jwt
+        );
+        dispatch(setUser(userDetailsResponse));
+
         setIsSignUpModalVisible(false);
-        if (userSignUpResponse.role === "SuperAdmin") navigate("/dashboard");
-      } else {
-        navigate("/");
+        if (userDetailsResponse.role === "SuperAdmin") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
       }
     } catch (error) {
       handleError(error);
@@ -109,12 +116,14 @@ const GeneraIndexPage = () => {
 
         const userToken = userSignInResponse.data.jwt;
         const userDetailsResponse = await getUserDetails(userToken);
+        dispatch(setUser(userDetailsResponse));
+
+        setIsSignInModalVisible(false);
         if (userDetailsResponse.role === "SuperAdmin") {
           navigate("/dashboard");
         } else {
           navigate("/");
         }
-        setIsSignInModalVisible(false);
       }
     } catch (error) {
       handleError(error);
@@ -140,9 +149,11 @@ const GeneraIndexPage = () => {
     dispatch(logout());
     navigate("/");
   };
+
   const handleOrdersClick = () => {
-    window.location.href = "/orders";
+    navigate("/orders");
   };
+
   const menuitems = [
     { key: "home", label: <Link to="/">Home</Link> },
     { key: "shampoo", label: <Link to="/shampoo">Shampoo</Link> },
@@ -172,7 +183,6 @@ const GeneraIndexPage = () => {
             {userInfo ? (
               <>
                 <Flex vertical justify="right" align="start">
-                  {" "}
                   <Typography>Welcome {userInfo.firstName}</Typography>
                   <Link onClick={handleLogout}>Logout</Link>
                 </Flex>
@@ -326,22 +336,24 @@ const GeneraIndexPage = () => {
           <Typography.Title level={4}>Sign up/Create Account</Typography.Title>
           <Form.Item
             name="firstName"
-            rules={[{ required: true, message: "Please input your username!" }]}
+            rules={[
+              { required: true, message: "Please input your first name!" },
+            ]}
           >
             <Input
-              // id="usernameInput"
-              placeholder="Username"
+              placeholder="First Name"
               size="large"
               style={{ borderRadius: "15px" }}
             />
           </Form.Item>
           <Form.Item
             name="lastName"
-            rules={[{ required: true, message: "Please input your username!" }]}
+            rules={[
+              { required: true, message: "Please input your last name!" },
+            ]}
           >
             <Input
-              // id="usernameInput"
-              placeholder="Username"
+              placeholder="Last Name"
               size="large"
               style={{ borderRadius: "15px" }}
             />
@@ -351,7 +363,6 @@ const GeneraIndexPage = () => {
             rules={[{ required: true, message: "Please input your email!" }]}
           >
             <Input
-              id="emailInput"
               placeholder="Email"
               size="large"
               style={{ borderRadius: "15px" }}
@@ -374,7 +385,6 @@ const GeneraIndexPage = () => {
             rules={[{ required: true, message: "Please input your password!" }]}
           >
             <Input.Password
-              id="passwordInput"
               placeholder="Password"
               size="large"
               style={{ borderRadius: "15px" }}
@@ -396,6 +406,7 @@ const GeneraIndexPage = () => {
           </div>
         </Form>
       </Modal>
+
       <Modal
         open={isSignInModalVisible}
         onCancel={handleCancel}
@@ -408,25 +419,21 @@ const GeneraIndexPage = () => {
           form={signInForm}
         >
           <Typography.Title level={4}>Sign in</Typography.Title>
-
           <Form.Item
             name="email"
             rules={[{ required: true, message: "Please input your email!" }]}
           >
             <Input
-              id="emailInput"
               placeholder="Email"
               size="large"
               style={{ borderRadius: "15px" }}
             />
           </Form.Item>
-
           <Form.Item
             name="password"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
             <Input.Password
-              id="passwordInput"
               placeholder="Password"
               size="large"
               style={{ borderRadius: "15px" }}

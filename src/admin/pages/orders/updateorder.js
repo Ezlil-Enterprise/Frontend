@@ -1,8 +1,22 @@
-import { Button, Col, Row, Form, Input, Select, Divider, message } from "antd";
+import {
+  Button,
+  Col,
+  Row,
+  Form,
+  Input,
+  Select,
+  Divider,
+  message,
+  Breadcrumb,
+  Typography,
+  Space,
+} from "antd";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { UserOutlined } from "@ant-design/icons";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { MB05 } from "../../../general/component/widget";
 
 const { Option } = Select;
 
@@ -54,7 +68,7 @@ const UpdateOrder = () => {
           },
         });
         message.success("Order updated successfully");
-        navigate("/admin/orders"); // Redirect to orders list after update
+        navigate("/admin/orders");
       } else {
         message.error("Invalid order status");
       }
@@ -66,13 +80,43 @@ const UpdateOrder = () => {
   };
 
   if (!order) {
-    return <div>Loading...</div>; // Display loading or empty state until redirect
+    return <div>Loading...</div>;
   }
 
   return (
-    <Row gutter={[16, 16]} style={{ padding: "15px" }}>
+    <Row gutter={[16, 16]} className="common-padding">
       <Col span={24}>
-        <h2>Update Order Status</h2>
+        <Typography className="ez-ls-h4 bold">Order</Typography>
+        <MB05 />
+        <Breadcrumb
+          items={[
+            {
+              href: "/dashboard",
+              title: (
+                <>
+                  <UserOutlined />
+                  <span>Admin</span>
+                </>
+              ),
+            },
+            {
+              href: "/admin/orders",
+              title: "Order",
+            },
+            {
+              title: "Update",
+            },
+          ]}
+        />
+      </Col>
+      <Col
+        span={24}
+        style={{
+          backgroundColor: "#fff",
+          padding: "15px",
+          borderRadius: "15px",
+        }}
+      >
         <Divider />
         <Form
           form={form}
@@ -119,9 +163,14 @@ const UpdateOrder = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
-              Update Order
-            </Button>
+            <Space>
+              <Button type="primary" htmlType="submit" loading={loading}>
+                Update Order
+              </Button>
+              <Button danger onClick={() => navigate("/admin/orders")}>
+                Cancel
+              </Button>
+            </Space>
           </Form.Item>
         </Form>
       </Col>

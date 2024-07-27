@@ -1,13 +1,13 @@
 import React from "react";
 import { Breadcrumb, Col, Row, Typography } from "antd";
-import { UserOutlined } from "@ant-design/icons";
 import { MB05 } from "../../../general/component/widget";
+import { UserOutlined } from "@ant-design/icons";
 
-const Dashboard = () => {
+const TransactionListPage = () => {
   return (
     <Row gutter={[16, 16]} className="common-padding">
       <Col span={24}>
-        <Typography className="ez-ls-h4 bold">Dashboard</Typography>
+        <Typography className="ez-ls-h4 bold">Transactions</Typography>
         <MB05 />
         <Breadcrumb
           items={[
@@ -19,6 +19,9 @@ const Dashboard = () => {
                   <span>Admin</span>
                 </>
               ),
+            },
+            {
+              title: "Transactions",
             },
           ]}
         />
@@ -33,12 +36,11 @@ const Dashboard = () => {
           gutter={[16, 16]}
         >
           <Col span={6}>
-            <Typography className="ez-ls-h4 bold">Dashboard</Typography>
+            <Typography className="ez-ls-h4 bold">Transactions</Typography>
           </Col>
         </Row>
       </Col>
     </Row>
   );
 };
-
-export default Dashboard;
+export default TransactionListPage;

@@ -11,14 +11,17 @@ import {
   Upload,
   Button,
   Space,
+  Breadcrumb,
+  Typography,
 } from "antd";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
-import { InboxOutlined } from "@ant-design/icons";
+import { InboxOutlined, UserOutlined } from "@ant-design/icons";
 import { getProductDetailsByID, updateProductDetails } from "../../api/product";
 import "../../asset/less/addproduct.less";
 import Cookies from "js-cookie";
 import { getAllCategoryDetails } from "../../api/category";
+import { MB05 } from "../../../general/component/widget";
 const { Option } = Select;
 const { Dragger } = Upload;
 
@@ -26,6 +29,7 @@ const UpdateProduct = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [categoryData, setCatergoryData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
   const { id } = useParams();
   const navigate = useNavigate();
@@ -92,6 +96,7 @@ const UpdateProduct = () => {
   }, [id, form]);
 
   const onFinish = async (values) => {
+    setLoading(true);
     try {
       values.description = values.description.replace(/<[^>]+>/g, "");
 
@@ -122,11 +127,35 @@ const UpdateProduct = () => {
         message.error(`Failed to update product: ${error.message}`);
       }
     }
+    setLoading(false);
   };
 
   return (
-    <Row gutter={[16, 16]} style={{ padding: "15px" }}>
-      <Col span={24}>Update Product</Col>
+    <Row gutter={[16, 16]} className="common-padding">
+      <Col span={24}>
+        <Typography className="ez-ls-h4 bold">Product</Typography>
+        <MB05 />{" "}
+        <Breadcrumb
+          items={[
+            {
+              href: "/dashboard",
+              title: (
+                <>
+                  <UserOutlined />
+                  <span>Admin</span>
+                </>
+              ),
+            },
+            {
+              href: "/admin/products",
+              title: "Product",
+            },
+            {
+              title: "Update",
+            },
+          ]}
+        />
+      </Col>
       <Col
         span={24}
         style={{
@@ -368,10 +397,10 @@ const UpdateProduct = () => {
             </Col>
             <Col span={24}>
               <Space>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" loading={loading}>
                   Update
                 </Button>
-                <Button danger onClick={() => navigate("/products")}>
+                <Button danger onClick={() => navigate("/admin/products")}>
                   Cancel
                 </Button>
               </Space>

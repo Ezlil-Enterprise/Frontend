@@ -1,17 +1,19 @@
 import {
+  Breadcrumb,
   Button,
   Col,
   Flex,
   Form,
   Input,
   Modal,
+  Popconfirm,
   Row,
   Select,
   Table,
   Typography,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import {
   addCategory,
   deleteCategory,
@@ -19,10 +21,12 @@ import {
 } from "../../api/category";
 import Cookies from "js-cookie";
 import Search from "antd/es/transfer/search";
+import { MB05 } from "../../../general/component/widget";
 
 const CategoryListPage = () => {
   const [categoryData, setCategoryData] = useState([]);
   const [mastervisible, setMasterVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
   const [form] = Form.useForm();
   useEffect(() => {
@@ -30,8 +34,10 @@ const CategoryListPage = () => {
       try {
         const categoryResponse = await getAllCategoryDetails(userToken);
         setCategoryData(categoryResponse);
+        setLoading(false);
       } catch (error) {
         console.log("Error:", error);
+        setLoading(false);
       }
     };
 
@@ -56,7 +62,7 @@ const CategoryListPage = () => {
       console.error("Error", error);
     }
   };
-  const handleDeleteProduct = async (id) => {
+  const handleDeleteCategory = async (id) => {
     const deleteCategoryResponse = await deleteCategory(userToken, id);
     if (deleteCategoryResponse) {
       const updatedCategoryData = await getAllCategoryDetails(userToken);
@@ -76,17 +82,49 @@ const CategoryListPage = () => {
       title: "Action",
       dataIndex: "action",
       render: (_, record) => (
-        <DeleteOutlined
-          style={{ color: "#ff0000" }}
-          onClick={() => handleDeleteProduct(record._id)}
-        />
+        <Popconfirm
+          placement="topLeft"
+          title="Are you sure to delete this category?"
+          description="Delete the task"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={() => handleDeleteCategory(record._id)}
+        >
+          <DeleteOutlined style={{ color: "#ff0000" }} />
+        </Popconfirm>
       ),
     },
   ];
+  // const rowSelection = {
+  //   onChange: (selectedRowKeys, selectedRows) => {
+  //     console.log(
+  //       `selectedRowKeys: ${selectedRowKeys}`,
+  //       "selectedRows: ",
+  //       selectedRows
+  //     );
+  //   },
+  // };
   return (
-    <Row gutter={[16, 16]} style={{ padding: "15px" }}>
+    <Row gutter={[16, 16]} className="common-padding">
       <Col span={24}>
-        <Typography>Category List</Typography>
+        <Typography className="ez-ls-h4 bold">Categories</Typography>
+        <MB05 />
+        <Breadcrumb
+          items={[
+            {
+              href: "/dashboard",
+              title: (
+                <>
+                  <UserOutlined />
+                  <span>Admin</span>
+                </>
+              ),
+            },
+            {
+              title: "Categories",
+            },
+          ]}
+        />
       </Col>
       <Col span={24}>
         <Row
@@ -131,7 +169,16 @@ const CategoryListPage = () => {
           </Col>
           <Col span={24}>
             {" "}
-            <Table columns={categoryColumn} dataSource={categoryData} />
+            <Table
+              columns={categoryColumn}
+              dataSource={categoryData}
+              // rowSelection={{
+              //   type: "checkbox",
+              //   ...rowSelection,
+              // }}
+              loading={loading}
+              rowKey="name"
+            />
           </Col>
         </Row>
       </Col>

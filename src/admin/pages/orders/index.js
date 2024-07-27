@@ -1,8 +1,9 @@
 import { Col, Row } from "antd";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import OrdersListPage from "./orders_list_page";
+
 import Updateorder from "./updateorder";
+import OrdersListPage from "./orderslistpage";
 
 const Orders = () => {
   return (

@@ -1,7 +1,9 @@
 import {
+  Breadcrumb,
   Button,
   Col,
   Flex,
+  Popconfirm,
   Row,
   Select,
   Table,
@@ -11,12 +13,13 @@ import {
 } from "antd";
 import Search from "antd/es/transfer/search";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { deleteCustomerByID, getCustomerDetailsByID } from "../../api/customer";
+import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
+import { getCustomerDetailsByID } from "../../api/customer";
 import { useNavigate } from "react-router-dom";
 import { deleteOrderByID, getAllOrders } from "../../api/orders";
 import Cookies from "js-cookie";
 import { formatDate } from "../../../utlils/date";
+import { MB05 } from "../../../general/component/widget";
 
 const OrdersListPage = () => {
   const [ordersData, setOrdersData] = useState([]);
@@ -97,16 +100,19 @@ const OrdersListPage = () => {
       title: "Action",
       dataIndex: "action",
       render: (_, record) => (
-        <DeleteOutlined
-          style={{ color: "#ff0000" }}
-          onClick={() => handleDeleteOrder(record._id)}
-        />
+        <Popconfirm
+          placement="topLeft"
+          title="Are you sure to delete this category?"
+          description="Delete the task"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={() => handleDeleteOrder(record._id)}
+        >
+          <DeleteOutlined style={{ color: "#ff0000" }} />
+        </Popconfirm>
       ),
     },
   ];
-  const handleAddCustomers = () => {
-    navigate("/admin/customers/addcustomer");
-  };
   const handleUpdateOrder = (record) => {
     navigate(`/admin/orders/updateorder/${record._id}`, {
       state: { order: record },
@@ -122,19 +128,36 @@ const OrdersListPage = () => {
       message.error("Failed to delete order");
     }
   };
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-  };
+  // const rowSelection = {
+  //   onChange: (selectedRowKeys, selectedRows) => {
+  //     console.log(
+  //       `selectedRowKeys: ${selectedRowKeys}`,
+  //       "selectedRows: ",
+  //       selectedRows
+  //     );
+  //   },
+  // };
   return (
-    <Row gutter={[16, 16]} style={{ padding: "15px" }}>
+    <Row gutter={[16, 16]} className="common-padding">
       <Col span={24}>
-        <Typography>Orders List</Typography>
+        <Typography className="ez-ls-h4 bold">Orders</Typography>
+        <MB05 />
+        <Breadcrumb
+          items={[
+            {
+              href: "/dashboard",
+              title: (
+                <>
+                  <UserOutlined />
+                  <span>Admin</span>
+                </>
+              ),
+            },
+            {
+              title: "Orders",
+            },
+          ]}
+        />
       </Col>
       <Col span={24}>
         <Row
@@ -177,21 +200,21 @@ const OrdersListPage = () => {
           </Col>
 
           <Col span={18} style={{ textAlign: "end" }}>
-            <Button
+            {/* <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={handleAddCustomers}
+              onClick={handleAddOrder}
             >
               Add Orders
-            </Button>
+            </Button> */}
           </Col>
           <Col span={24}>
             <Table
               columns={ordersColumn}
-              rowSelection={{
-                type: "checkbox",
-                ...rowSelection,
-              }}
+              // rowSelection={{
+              //   type: "checkbox",
+              //   ...rowSelection,
+              // }}
               dataSource={ordersData}
               loading={loading}
               rowKey="SKU"
