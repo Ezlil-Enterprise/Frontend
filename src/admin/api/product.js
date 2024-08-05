@@ -1,8 +1,9 @@
 const axios = require("axios");
+import { MIDDLEWARE_API_URL } from "../../constants";
 
 export const getAllProductDetails = async () => {
   try {
-    const response = await axios.get("http://localhost:4001/api/products/");
+    const response = await axios.get(`${MIDDLEWARE_API_URL}/api/products/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching product details:", error);
@@ -12,7 +13,7 @@ export const getAllProductDetails = async () => {
 export const getProductDetailsByID = async (id) => {
   try {
     const response = await axios.get(
-      `http://localhost:4001/api/products/id/${id}`
+      `${MIDDLEWARE_API_URL}/api/products/id/${id}`
     );
     return response.data;
   } catch (error) {
@@ -22,9 +23,8 @@ export const getProductDetailsByID = async (id) => {
 };
 export const addProductData = async (formData) => {
   try {
-   
     const response = await axios.post(
-      "http://localhost:4001/api/admin/products/",
+      `${MIDDLEWARE_API_URL}/api/admin/products/`,
       formData,
       {
         headers: {
@@ -38,11 +38,10 @@ export const addProductData = async (formData) => {
     throw error;
   }
 };
-export const updateProductDetails = async (id, values,token) => {
- 
+export const updateProductDetails = async (id, values, token) => {
   try {
     const response = await axios.put(
-      `http://localhost:4001/api/admin/products/${id}`,
+      `${MIDDLEWARE_API_URL}/api/admin/products/${id}`,
       values,
       {
         headers: {
@@ -58,13 +57,14 @@ export const updateProductDetails = async (id, values,token) => {
     throw error;
   }
 };
-export const deleteProductByID = async (id,token) => {
+export const deleteProductByID = async (id, token) => {
   try {
     const response = await axios.delete(
-      `http://localhost:4001/api/admin/products/${id}`,{
-        headers:{
-          Authorization:`Bearer ${token}`
-        }
+      `${MIDDLEWARE_API_URL}/api/admin/products/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
     return response.data;

@@ -1,5 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require('webpack');
+const dotenv = require('dotenv').config({ path: './.env' });
 
 module.exports = {
   entry: "./src/index.js",
@@ -20,10 +22,13 @@ module.exports = {
       template: path.join(__dirname, "public", "index.html"),
       publicPath: '/',
     }),
+   
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(dotenv.parsed)
+    })
   ],
   module: {
     rules: [
-      // JavaScript/JSX rule (unchanged)
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
@@ -31,7 +36,6 @@ module.exports = {
           loader: 'babel-loader'
         }
       },
-      // LESS rule (unchanged)
       {
         test: /\.less$/,
         use: [
@@ -40,17 +44,15 @@ module.exports = {
           "less-loader"
         ],
       },
-      // CSS rule (unchanged)
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
-      // Image rule using Asset Modules (recommended for webpack 5+)
       {
         test: /\.(png|jpe?g|gif|svg|ico|webp)$/,
-        type: 'asset/resource', // Handles copying and emits a separate file with URL
+        type: 'asset/resource',
         generator: {
-          filename: 'images/[name].[ext]', // Output path and filename pattern
+          filename: 'images/[name].[ext]',
         },
       },
     ]

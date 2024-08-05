@@ -1,16 +1,14 @@
 import axios from "axios";
+import { MIDDLEWARE_API_URL } from "../../constants";
 
 export const getAllCategoryDetails = async (token) => {
   try {
-    const response = await axios.get(
-      "http://localhost:4001/api/category/",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.get(`${MIDDLEWARE_API_URL}/api/category/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching product details:", error);
@@ -20,7 +18,7 @@ export const getAllCategoryDetails = async (token) => {
 export const addCategory = async (token, values) => {
   try {
     const response = await axios.post(
-      "http://localhost:4001/api/category",
+      `${MIDDLEWARE_API_URL}/api/category`,
       values,
       {
         headers: {
@@ -38,7 +36,7 @@ export const addCategory = async (token, values) => {
 export const deleteCategory = async (token, id) => {
   try {
     const response = await axios.delete(
-      `http://localhost:4001/api/category/${id}`,
+      `${MIDDLEWARE_API_URL}/api/category/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -1,8 +1,9 @@
 const axios = require("axios");
+import { MIDDLEWARE_API_URL } from "../../constants";
 
 export const getCustomerDetails = async () => {
   try {
-    const response = await axios.get("http://localhost:4001/api/users/");
+    const response = await axios.get(`${MIDDLEWARE_API_URL}/api/users/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching customer details:", error);
@@ -11,7 +12,7 @@ export const getCustomerDetails = async () => {
 };
 export const getCustomerDetailsByID = async (id) => {
   try {
-    const response = await axios.get(`http://localhost:4001/api/users/${id}`);
+    const response = await axios.get(`${MIDDLEWARE_API_URL}/api/users/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching customer details:", error);
@@ -21,7 +22,7 @@ export const getCustomerDetailsByID = async (id) => {
 export const addCustomerData = async (formData) => {
   try {
     const response = await axios.post(
-      "http://localhost:4001/auth/signup",
+      `${MIDDLEWARE_API_URL}/auth/signup`,
       formData
     );
     return response.data;
@@ -33,7 +34,7 @@ export const addCustomerData = async (formData) => {
 export const updateCustomerDetails = async (id, values) => {
   try {
     const response = await axios.put(
-      `http://localhost:4001/api/users/${id}`,
+      `${MIDDLEWARE_API_URL}/api/users/${id}`,
       values
     );
     return response.data;
@@ -45,7 +46,7 @@ export const updateCustomerDetails = async (id, values) => {
 export const deleteCustomerByID = async (id) => {
   try {
     const response = await axios.delete(
-      `http://localhost:4001/api/users/${id}`
+      `${MIDDLEWARE_API_URL}/api/users/${id}`
     );
     return response.data;
   } catch (error) {

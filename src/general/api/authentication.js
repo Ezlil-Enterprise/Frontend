@@ -1,8 +1,10 @@
 const axios = require("axios");
+import { MIDDLEWARE_API_URL } from "../../constants";
+
 export const userSignup = async (formData) => {
   try {
     const response = await axios.post(
-      "http://localhost:4001/auth/signup",
+      `${MIDDLEWARE_API_URL}/auth/signup`,
       formData
     );
     return response;
@@ -14,7 +16,7 @@ export const userSignup = async (formData) => {
 export const userSignin = async (formData) => {
   try {
     const response = await axios.post(
-      "http://localhost:4001/auth/signin",
+      `${MIDDLEWARE_API_URL}/auth/signin`,
       formData
     );
     return response;
@@ -27,7 +29,7 @@ export const userSignin = async (formData) => {
 export const getUserDetails = async (token) => {
   try {
     const response = await axios.get(
-      "http://localhost:4001/api/users/profile",
+      `${MIDDLEWARE_API_URL}/api/users/profile`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,7 +45,7 @@ export const getUserDetails = async (token) => {
 };
 export const getUserDetailsByID = async (id) => {
   try {
-    const response = await axios.get(`http://localhost:4001/api/users/${id}`);
+    const response = await axios.get(`${MIDDLEWARE_API_URL}/api/users/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching user details:", error);
