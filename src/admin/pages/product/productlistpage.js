@@ -21,7 +21,7 @@ import Cookies from "js-cookie";
 
 const ProductListPage = () => {
   const [productData, setProductData] = useState([]);
-  const [categoryData, setCatergoryData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -45,14 +45,18 @@ const ProductListPage = () => {
     fetchData();
   }, []);
 
+  const filteredData = productData.filter((product) =>
+    product.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const productColumn = [
-    // {
-    //   title: "SKU",
-    //   dataIndex: "SKU",
-    //   render: (text, record) => (
-    //     <a onClick={() => handleUpdateProduct(record)}>{text}</a>
-    //   ),
-    // },
+    {
+      title: "SKU",
+      dataIndex: "SKU",
+      render: (text, record) => (
+        <a onClick={() => handleUpdateProduct(record)}>{text}</a>
+      ),
+    },
     {
       title: "Product",
       dataIndex: "title",
@@ -63,7 +67,6 @@ const ProductListPage = () => {
     {
       title: "Brand",
       dataIndex: "brand",
-      sorter: (a, b) => a.stock - b.stock,
     },
     {
       title: "Category",
@@ -71,24 +74,16 @@ const ProductListPage = () => {
       filters: [
         {
           text: "Soap",
-          value: "soap",
+          value: "Soap",
         },
         {
-          text: "Face Wash",
-          value: "face_wash",
-        },
-        {
-          text: "Face Mask",
-          value: "face_mask",
-        },
-        {
-          text: "Face Sierm",
-          value: "face_sierm",
+          text: "Shampoo",
+          value: "Shampoo",
         },
       ],
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.name.startsWith(value),
+      onFilter: (value, record) => record.category.name.startsWith(value),
     },
     {
       title: "Price",
@@ -98,7 +93,7 @@ const ProductListPage = () => {
     {
       title: "Stock",
       dataIndex: "quantity",
-      sorter: (a, b) => a.stock - b.stock,
+      sorter: (a, b) => a.quantity - b.quantity,
     },
 
     {
@@ -134,15 +129,6 @@ const ProductListPage = () => {
       message.error("Failed to delete product");
     }
   };
-  // const rowSelection = {
-  //   onChange: (selectedRowKeys, selectedRows) => {
-  //     console.log(
-  //       `selectedRowKeys: ${selectedRowKeys}`,
-  //       "selectedRows: ",
-  //       selectedRows
-  //     );
-  //   },
-  // };
   return (
     <Row gutter={[16, 16]} className="common-padding">
       <Col span={24}>
@@ -175,26 +161,12 @@ const ProductListPage = () => {
           gutter={[16, 16]}
         >
           <Col span={6}>
-            <Flex gap="small">
-              <Search placeholder="search" allowClear />
-              <Select
-                style={{
-                  width: 120,
-                }}
-                allowClear
-                placeholder={"--Select--"}
-                options={[
-                  {
-                    value: "soap",
-                    label: "Soap",
-                  },
-                  {
-                    value: "face_wash",
-                    label: "Face Wash",
-                  },
-                ]}
-              />
-            </Flex>
+            <Search
+              placeholder="search"
+              allowClear
+              onSearch={(value) => setSearchTerm(value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </Col>
 
           <Col span={18} style={{ textAlign: "end" }}>
@@ -209,13 +181,9 @@ const ProductListPage = () => {
           <Col span={24}>
             <Table
               columns={productColumn}
-              // rowSelection={{
-              //   type: "checkbox",
-              //   ...rowSelection,
-              // }}
-              dataSource={productData}
+              dataSource={filteredData}
               loading={loading}
-              rowKey="title"
+              rowKey="_id"
             />
           </Col>
         </Row>

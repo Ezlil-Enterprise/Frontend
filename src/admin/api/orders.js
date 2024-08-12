@@ -15,6 +15,21 @@ export const getAllOrders = async (token) => {
   }
 };
 
+export const getOrderDetailsByID = async (id, token) => {
+  try {
+    const response = await axios.get(`${MIDDLEWARE_API_URL}/api/order/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "applicatio.json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching product details:", error);
+    throw error;
+  }
+};
+
 export const deleteOrderByID = async (token, id) => {
   try {
     const response = await axios.delete(

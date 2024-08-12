@@ -18,6 +18,7 @@ import axios from "axios";
 import { addCustomerData } from "../../api/customer";
 import { MB05 } from "../../../general/component/widget";
 import { useNavigate } from "react-router-dom";
+import { PINCODE_API_URL } from "../../../constants";
 
 const { Option } = Select;
 
@@ -56,7 +57,7 @@ const Addcustomer = () => {
     if (postalCode.length === 6) {
       try {
         const response = await axios.get(
-          `https://api.postalpincode.in/pincode/${postalCode}`
+          `${PINCODE_API_URL}/pincode/${postalCode}`
         );
         if (response.data && response.data[0].Status === "Success") {
           const { PostOffice } = response.data[0];
@@ -212,23 +213,23 @@ const Addcustomer = () => {
                     </Select>
                   </Form.Item>
                 </Col>
-                {/* <Col span={12}>
-                    <Form.Item
-                      name="status"
-                      label="Status"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Status is required.",
-                        },
-                      ]}
-                    >
-                      <Select placeholder="--Select--" allowClear>
-                        <Option value="Active">Active</Option>
-                        <Option value="Inactive">Inactive</Option>
-                      </Select>
-                    </Form.Item>
-                  </Col> */}
+                <Col span={12}>
+                  <Form.Item
+                    name="status"
+                    label="Status"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Status is required.",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="--Select--" allowClear>
+                      <Option value="Active">Active</Option>
+                      <Option value="Inactive">Inactive</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
               </Row>
             </Col>
             <Col span={12}>

@@ -12,45 +12,62 @@ import {
   Space,
 } from "antd";
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UserOutlined } from "@ant-design/icons";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { MB05 } from "../../../general/component/widget";
+import { getOrderDetailsByID } from "../../api/orders";
+import TextArea from "antd/es/input/TextArea";
+import { MIDDLEWARE_API_URL } from "../../../constants";
 
 const { Option } = Select;
 
 const UpdateOrder = () => {
-  const { state } = useLocation();
-  const { order } = state || {};
   const [form] = Form.useForm();
+  const { id } = useParams();
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
 
   useEffect(() => {
-    if (!order) {
-      message.error("No order data found. Redirecting to orders list.");
-      navigate("/admin/orders");
-    } else {
-      form.setFieldsValue({
-        orderStatus: order.orderStatus,
-      });
-    }
-  }, [form, order, navigate]);
+    const fetchOrder = async () => {
+      try {
+        const response = await getOrderDetailsByID(id, userToken);
+        if (response) {
+          form.setFieldsValue({
+            orderStatus: response.orderStatus,
+            orderDate: new Date(response.orderDate).toLocaleString(),
+            totalItems: response.totalItems,
+            totalPrice: response.totalPrice,
+            shippingAddress: `${response.shippingAddress.name}, ${response.shippingAddress.addressLine1}, ${response.shippingAddress.city},${response.shippingAddress.state},${response.shippingAddress.zipCode}`,
+          });
+        } else {
+          console.error("Invalid response structure:", response);
+          message.error("Failed to fetch product details");
+        }
+      } catch (error) {
+        console.error("Failed to fetch product details:", error);
+        message.error("Failed to fetch product details");
+      }
+    };
+
+    fetchOrder();
+  }, [id, form]);
 
   const getEndpoint = (orderId, status) => {
     switch (status) {
       case "CONFIRMED":
-        return `http://localhost:4001/api/admin/order/${orderId}/confirmed`;
+        return `${MIDDLEWARE_API_URL}/api/admin/order/${orderId}/confirmed`;
       case "PLACED":
-        return `http://localhost:4001/api/admin/order/${orderId}/placed`;
+        return `${MIDDLEWARE_API_URL}/api/admin/order/${orderId}/placed`;
       case "SHIPPED":
-        return `http://localhost:4001/api/admin/order/${orderId}/ship`;
+        return `${MIDDLEWARE_API_URL}/api/admin/order/${orderId}/ship`;
       case "DELIVERED":
-        return `http://localhost:4001/api/admin/order/${orderId}/deliver`;
+        return `${MIDDLEWARE_API_URL}/api/admin/order/${orderId}/deliver`;
       case "CANCELLED":
-        return `http://localhost:4001/api/admin/order/${orderId}/cancel`;
+        return `${MIDDLEWARE_API_URL}/api/admin/order/${orderId}/cancel`;
       default:
         return null;
     }
@@ -59,7 +76,7 @@ const UpdateOrder = () => {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      const endpoint = getEndpoint(order._id, values.orderStatus);
+      const endpoint = getEndpoint(id, values.orderStatus);
       if (endpoint) {
         const response = await axios.get(endpoint, {
           headers: {
@@ -79,7 +96,7 @@ const UpdateOrder = () => {
     setLoading(false);
   };
 
-  if (!order) {
+  if (!id) {
     return <div>Loading...</div>;
   }
 
@@ -118,32 +135,25 @@ const UpdateOrder = () => {
         }}
       >
         <Divider />
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmit}
-          initialValues={{
-            orderStatus: order.orderStatus,
-          }}
-        >
+        <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item label="Order ID">
-            <Input value={order._id} disabled />
+            <Input disabled value={id} />
           </Form.Item>
 
-          <Form.Item label="Order Date">
-            <Input value={order.orderDate} disabled />
+          <Form.Item label="Order Date" name="orderDate">
+            <Input disabled />
           </Form.Item>
 
-          <Form.Item label="Total Items">
-            <Input value={order.totalItems} disabled />
+          <Form.Item label="Total Items" name="totalItems">
+            <Input disabled />
           </Form.Item>
 
-          <Form.Item label="Total Price">
-            <Input value={order.totalPrice} disabled />
+          <Form.Item label="Total Price" name="totalPrice">
+            <Input disabled />
           </Form.Item>
 
-          <Form.Item label="Shipping Address">
-            <Input value={order.shippingAddress} disabled />
+          <Form.Item label="Shipping Address" name="shippingAddress">
+            <TextArea disabled />
           </Form.Item>
 
           <Form.Item

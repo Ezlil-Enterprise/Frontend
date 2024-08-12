@@ -1,11 +1,7 @@
-export const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat("en-GB", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  }).format(date);
-};
+import { format, parseISO } from "date-fns";
+
+export function convertToLocalTimeFormat(isoTime) {
+  const date = parseISO(isoTime);
+  const formattedLocal = format(date, "MM-dd-yyyy hh:mm a");
+  return formattedLocal;
+}

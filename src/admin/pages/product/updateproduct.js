@@ -22,6 +22,7 @@ import "../../asset/less/addproduct.less";
 import Cookies from "js-cookie";
 import { getAllCategoryDetails } from "../../api/category";
 import { MB05 } from "../../../general/component/widget";
+import { MIDDLEWARE_API_URL } from "../../../constants";
 const { Option } = Select;
 const { Dragger } = Upload;
 
@@ -78,7 +79,7 @@ const UpdateProduct = () => {
                 uid: "-1",
                 name: response.imageUrl.split("/").pop(),
                 status: "done",
-                url: `http://localhost:4001/${response.imageUrl}`,
+                url: `${MIDDLEWARE_API_URL}/${response.imageUrl}`,
               },
             ]);
           }
@@ -220,7 +221,7 @@ const UpdateProduct = () => {
                     </Select>
                   </Form.Item>
                 </Col>
-                {/* <Col span={12}>
+                <Col span={12}>
                   <Form.Item
                     label="SKU"
                     name="SKU"
@@ -232,9 +233,9 @@ const UpdateProduct = () => {
                     ]}
                     tooltip="stock keeping unit"
                   >
-                    <Input placeholder="SKU" />
+                    <Input disabled={true} placeholder="SKU" />
                   </Form.Item>
-                </Col> */}
+                </Col>
                 <Col span={12}>
                   <Form.Item
                     label="Regular Price"
@@ -362,7 +363,7 @@ const UpdateProduct = () => {
                     </Select>
                   </Form.Item>
                 </Col>
-                {/* <Col span={12}>
+                <Col span={12}>
                   <Form.Item
                     name="status"
                     label="Status"
@@ -378,7 +379,7 @@ const UpdateProduct = () => {
                       <Option value="Inactive">InActive</Option>
                     </Select>
                   </Form.Item>
-                </Col> */}
+                </Col>
               </Row>
             </Col>
             <Col span={12}>

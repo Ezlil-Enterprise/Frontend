@@ -18,6 +18,8 @@ import Cookies from "js-cookie";
 import { getProductDetailsByID } from "../api/product";
 import { formatDate } from "../../utlils/date";
 import { addCartDetails } from "../api/cart";
+import { MIDDLEWARE_API_URL } from "../../constants";
+import moment from "moment";
 
 const Orders = () => {
   const [orderData, setOrderData] = useState([]);
@@ -28,7 +30,6 @@ const Orders = () => {
       try {
         if (userToken) {
           const orderDataResponse = await orderHistory(userToken);
-          console.log(orderDataResponse);
           setOrderData(orderDataResponse);
         }
       } catch (error) {
@@ -42,7 +43,6 @@ const Orders = () => {
     try {
       const productDetails = await getProductDetailsByID(id);
       const addtoCartResponse = await addCartDetails(userToken, productDetails);
-      console.log(addtoCartResponse);
     } catch (error) {
       console.error("Error fetching product details:", error);
     }
@@ -78,12 +78,14 @@ const Orders = () => {
                 <Card title={`Order ID: ${order._id}`} hoverable>
                   <Flex style={{ padding: "20px" }}>
                     {" "}
-                    <Typography>{formatDate(order.orderDate)}</Typography>
+                    <Typography>
+                      {moment(order.orderDate).format("MM/DD/YYYY hh:mm:ss")}
+                    </Typography>
                   </Flex>
                   {order.orderItems?.map((item) => {
                     const imageUrl = item.product?.imageUrl
-                      ? `http://localhost:4001/${item.product.imageUrl}`
-                      : "defaultProductImagePath"; 
+                      ? `${MIDDLEWARE_API_URL}/${item.product.imageUrl}`
+                      : "defaultProductImagePath";
 
                     return (
                       <Row key={item._id} style={{ marginBottom: "20px" }}>

@@ -16,9 +16,10 @@ import axios from "axios";
 import { getUserDetails } from "../api/authentication";
 import { MB05, MB10, MB20 } from "../component/widget";
 import { getCartDetails } from "../api/cart";
-import product1 from "../asset/image/product.jpg"; // Add a default image or import your product image here
+import product1 from "../asset/image/product.jpg";
 import { placeOrder } from "../api/order";
 import Footercomponent from "../component/card/footer";
+import { MIDDLEWARE_API_URL, PINCODE_API_URL } from "../../constants";
 
 const Checkout = () => {
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
@@ -41,7 +42,6 @@ const Checkout = () => {
       try {
         if (userToken) {
           const cartDataResponse = await getCartDetails(userToken);
-          console.log(cartDataResponse);
           setCartData(cartDataResponse);
         }
       } catch (error) {
@@ -58,7 +58,7 @@ const Checkout = () => {
     if (postalCode.length === 6) {
       try {
         const response = await axios.get(
-          `https://api.postalpincode.in/pincode/${postalCode}`
+          `${PINCODE_API_URL}/pincode/${postalCode}`
         );
         if (response.data && response.data[0].Status === "Success") {
           const { PostOffice } = response.data[0];
@@ -83,7 +83,6 @@ const Checkout = () => {
     try {
       const values = await form.validateFields();
       setAddressData(values);
-      console.log(values);
       message.success("Address saved successfully");
     } catch (error) {
       message.error("Failed to save address");
@@ -101,7 +100,6 @@ const Checkout = () => {
         }
       }
     } catch (error) {
-      console.log(error);
       message.error("Order is not placed");
     }
   };
@@ -244,24 +242,27 @@ const Checkout = () => {
                     </Typography>
                     <MB05 />
                     <Row>
-                    {userData.address.map((address, index) => (
-                      <Col span={12} className="custom-address-card" key={index}>
-                        <Typography className="ez-ls-h5">
-                          {address.name}
-                        </Typography>
-                        <Divider />
-                        <Typography className="ez-ls-h6">
-                          {address.addressLine1}
-                        </Typography>
-                        <Typography className="ez-ls-h6">
-                          {address.city},
-                          {address.state}
-                        </Typography>
-                        <Typography className="ez-ls-h6">
-                          {address.zipCode}
-                        </Typography>
-                      </Col>
-                        ))}
+                      {userData.address.map((address, index) => (
+                        <Col
+                          span={12}
+                          className="custom-address-card"
+                          key={index}
+                        >
+                          <Typography className="ez-ls-h5">
+                            {address.name}
+                          </Typography>
+                          <Divider />
+                          <Typography className="ez-ls-h6">
+                            {address.addressLine1}
+                          </Typography>
+                          <Typography className="ez-ls-h6">
+                            {address.city},{address.state}
+                          </Typography>
+                          <Typography className="ez-ls-h6">
+                            {address.zipCode}
+                          </Typography>
+                        </Col>
+                      ))}
                     </Row>
                   </Col>
                 )}
@@ -304,7 +305,7 @@ const Checkout = () => {
               </Col>
               {cartData?.cartItems?.map((item) => {
                 const imageUrl = item.product.imageUrl
-                  ? `http://localhost:4001/${item.product.imageUrl}`
+                  ? `${MIDDLEWARE_API_URL}/${item.product.imageUrl}`
                   : product1;
 
                 return (

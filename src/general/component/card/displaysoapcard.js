@@ -6,6 +6,7 @@ import "../../asset/less/typography-ls.less";
 import "../../asset/less/card.less";
 import { Link } from "react-router-dom";
 import { getAllProductDetails } from "../../api/product";
+import { MIDDLEWARE_API_URL } from "../../../constants";
 
 const Displaycard = ({ category }) => {
   const [productData, setProductData] = useState([]);
@@ -14,7 +15,6 @@ const Displaycard = ({ category }) => {
     const fetchProductData = async () => {
       try {
         const response = await getAllProductDetails();
-        console.log("Fetched Product Data:", response);
         setProductData(response);
       } catch (error) {
         console.error("Error fetching product details:", error);
@@ -23,28 +23,27 @@ const Displaycard = ({ category }) => {
     fetchProductData();
   }, []);
 
-  const filteredItems = productData.filter(product => product.category.name === category);
+  const filteredItems = productData.filter(
+    (product) => product.category.name === category
+  );
 
   return (
     <Row gutter={[16, 16]}>
       {filteredItems.map((product) => {
         const imageUrl = product.imageUrl
-          ? `http://localhost:4001/${product.imageUrl}`
+          ? `${MIDDLEWARE_API_URL}/${product.imageUrl}`
           : product1;
 
         return (
           <Col key={product._id} span={6} xs={24} sm={24} md={12} lg={6} xl={6}>
             <Card className="product-card">
               <Row>
-                <Col
-                  span={24}
-                  className="case-bg"
-                >
-                     <Image
-          src={imageUrl}
-          preview={false}
-          style={{ height: "200px%" }}
-        />
+                <Col span={24} className="case-bg">
+                  <Image
+                    src={imageUrl}
+                    preview={false}
+                    style={{ height: "200px%" }}
+                  />
                 </Col>
                 <Col
                   span={24}

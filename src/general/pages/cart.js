@@ -19,6 +19,7 @@ import product1 from "../asset/image/product.jpg";
 import { CloseOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Footercomponent from "../component/card/footer";
+import { MIDDLEWARE_API_URL } from "../../constants";
 
 const Cart = () => {
   const [cartData, setCartData] = useState();
@@ -30,7 +31,6 @@ const Cart = () => {
       if (userToken) {
         const userInfoResponse = await getUserDetails(userToken);
         setUserData(userInfoResponse);
-        console.log(userInfoResponse);
         if (userInfoResponse) {
           fetchCartData();
         }
@@ -44,7 +44,6 @@ const Cart = () => {
     try {
       if (userToken) {
         const cartDataResponse = await getCartDetails(userToken, userData);
-        console.log(cartDataResponse);
         setCartData(cartDataResponse);
       }
     } catch (error) {
@@ -111,7 +110,7 @@ const Cart = () => {
               <Row style={{ padding: "20px" }}>
                 {cartData.cartItems.map((item) => {
                   const imageUrl = item.product.imageUrl
-                    ? `http://localhost:4001/${item.product.imageUrl}`
+                    ? `${MIDDLEWARE_API_URL}/${item.product.imageUrl}`
                     : product1;
 
                   return (

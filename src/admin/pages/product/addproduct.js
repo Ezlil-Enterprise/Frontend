@@ -196,21 +196,6 @@ const Addproduct = () => {
                     </Select>
                   </Form.Item>
                 </Col>
-                {/* <Col span={12}>
-                  <Form.Item
-                    label="SKU"
-                    name="SKU"
-                    rules={[
-                      {
-                        required: true,
-                        message: "SKU is required.",
-                      },
-                    ]}
-                    tooltip="stock keeping unit"
-                  >
-                    <Input placeholder="SKU" />
-                  </Form.Item>
-                </Col> */}
                 <Col span={12}>
                   <Form.Item
                     label="Regular Price"
@@ -338,7 +323,7 @@ const Addproduct = () => {
                     </Select>
                   </Form.Item>
                 </Col>
-                {/* <Col span={12}>
+                <Col span={12}>
                   <Form.Item
                     name="status"
                     label="Status"
@@ -354,7 +339,7 @@ const Addproduct = () => {
                       <Option value="Inactive">InActive</Option>
                     </Select>
                   </Form.Item>
-                </Col> */}
+                </Col>
               </Row>
             </Col>
             <Col span={12}>
