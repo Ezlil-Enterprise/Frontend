@@ -30,6 +30,7 @@ const UpdateOrder = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
+  const [orderItems, setOrderItems] = useState([]);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -43,13 +44,16 @@ const UpdateOrder = () => {
             totalPrice: response.totalPrice,
             shippingAddress: `${response.shippingAddress.name}, ${response.shippingAddress.addressLine1}, ${response.shippingAddress.city},${response.shippingAddress.state},${response.shippingAddress.zipCode}`,
           });
+
+          console.log(response.orderItems);
+          setOrderItems(response.orderItems);
         } else {
           console.error("Invalid response structure:", response);
-          message.error("Failed to fetch product details");
+          message.error("Failed to fetch order details");
         }
       } catch (error) {
-        console.error("Failed to fetch product details:", error);
-        message.error("Failed to fetch product details");
+        console.error("Failed to fetch order details:", error);
+        message.error("Failed to fetch order details");
       }
     };
 
@@ -171,6 +175,24 @@ const UpdateOrder = () => {
               <Option value="CANCELLED">Cancelled</Option>
             </Select>
           </Form.Item>
+
+          <Divider>Order Items</Divider>
+
+          {orderItems.map((item) => (
+            <div key={item._id} style={{ marginBottom: "10px" }}>
+              <Typography.Text strong>SKU:</Typography.Text> {item.product.SKU}{" "}
+              <br />
+              <Typography.Text strong>Product:</Typography.Text>{" "}
+              {item.product.title} <br />
+              <Typography.Text strong>Price:</Typography.Text> {item.price}{" "}
+              <br />
+              <Typography.Text strong>Quantity:</Typography.Text>{" "}
+              {item.quantity} <br />
+              <Typography.Text strong>Discounted Price:</Typography.Text>{" "}
+              {item.discountedPrice} <br />
+              <Divider />
+            </div>
+          ))}
 
           <Form.Item>
             <Space>
