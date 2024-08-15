@@ -29,6 +29,8 @@ const CategoryListPage = () => {
   const [loading, setLoading] = useState(true);
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
   const [form] = Form.useForm();
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -95,15 +97,9 @@ const CategoryListPage = () => {
       ),
     },
   ];
-  // const rowSelection = {
-  //   onChange: (selectedRowKeys, selectedRows) => {
-  //     console.log(
-  //       `selectedRowKeys: ${selectedRowKeys}`,
-  //       "selectedRows: ",
-  //       selectedRows
-  //     );
-  //   },
-  // };
+  const filteredData = categoryData.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <Row gutter={[16, 16]} className="common-padding">
       <Col span={24}>
@@ -136,26 +132,12 @@ const CategoryListPage = () => {
           gutter={[16, 16]}
         >
           <Col span={6}>
-            <Flex gap="small">
-              <Search placeholder="search" allowClear />
-              <Select
-                style={{
-                  width: 120,
-                }}
-                allowClear
-                placeholder={"--Select--"}
-                options={[
-                  {
-                    value: "soap",
-                    label: "Soap",
-                  },
-                  {
-                    value: "face_wash",
-                    label: "Face Wash",
-                  },
-                ]}
-              />
-            </Flex>
+            <Search
+              placeholder="search"
+              allowClear
+              onSearch={(value) => setSearchTerm(value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </Col>
 
           <Col span={18} style={{ textAlign: "end" }}>
@@ -168,14 +150,9 @@ const CategoryListPage = () => {
             </Button>
           </Col>
           <Col span={24}>
-            {" "}
             <Table
               columns={categoryColumn}
-              dataSource={categoryData}
-              // rowSelection={{
-              //   type: "checkbox",
-              //   ...rowSelection,
-              // }}
+              dataSource={filteredData}
               loading={loading}
               rowKey="name"
             />

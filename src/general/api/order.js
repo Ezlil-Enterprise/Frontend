@@ -1,11 +1,14 @@
 import axios from "axios";
 import { MIDDLEWARE_API_URL } from "../../constants";
 
-export const placeOrder = async (token, { addressData }) => {
+export const placeOrder = async (token, { addressData }, payment_id) => {
   try {
     const response = await axios.post(
       `${MIDDLEWARE_API_URL}/api/order/`,
-      addressData,
+      {
+        paymentId: payment_id,
+        addressData: addressData || userData.address,
+      },
       {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -1,31 +1,31 @@
-const path = require('path');
+const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const webpack = require('webpack');
-const dotenv = require('dotenv').config({ path: './.env' });
+const webpack = require("webpack");
+const dotenv = require("dotenv").config({ path: "./.env" });
 
 module.exports = {
   entry: "./src/index.js",
   output: {
     filename: "index.bundle.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: '/',
+    publicPath: "/",
   },
   devServer: {
     port: 3015,
     historyApiFallback: true,
     static: {
-      directory: path.join(__dirname, 'public'),
+      directory: path.join(__dirname, "public"),
     },
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "public", "index.html"),
-      publicPath: '/',
+      publicPath: "/",
     }),
-   
+
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify(dotenv.parsed)
-    })
+      "process.env": JSON.stringify(dotenv.parsed),
+    }),
   ],
   module: {
     rules: [
@@ -33,16 +33,12 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
-        }
+          loader: "babel-loader",
+        },
       },
       {
         test: /\.less$/,
-        use: [
-          "style-loader",
-          "css-loader",
-          "less-loader"
-        ],
+        use: ["style-loader", "css-loader", "less-loader"],
       },
       {
         test: /\.css$/,
@@ -50,11 +46,16 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|svg|ico|webp)$/,
-        type: 'asset/resource',
+        type: "asset/resource",
         generator: {
-          filename: 'images/[name].[ext]',
+          filename: "images/[name].[ext]",
         },
       },
-    ]
-  }
+    ],
+  },
+  resolve: {
+    fallback: {
+      crypto: false,
+    },
+  },
 };

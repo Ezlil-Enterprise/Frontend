@@ -8,23 +8,27 @@ import {
   Row,
   Select,
   Table,
+  Tag,
   Typography,
   message,
 } from "antd";
 import Search from "antd/es/transfer/search";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import { deleteProductByID, getAllProductDetails } from "../../api/product";
 import { Form, useNavigate } from "react-router-dom";
 import { MB05, MB10 } from "../../../general/component/widget";
 import Cookies from "js-cookie";
+import { getColumnSearchProps } from "../../../utlils/table";
 
 const ProductListPage = () => {
   const [productData, setProductData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
   const [loading, setLoading] = useState(true);
+  const [searchedColumn, setSearchedColumn] = useState("");
   const navigate = useNavigate();
+  const searchInput = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +50,7 @@ const ProductListPage = () => {
   }, []);
 
   const filteredData = productData.filter((product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
+    product.SKU.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const productColumn = [
@@ -56,6 +60,7 @@ const ProductListPage = () => {
       render: (text, record) => (
         <a onClick={() => handleUpdateProduct(record)}>{text}</a>
       ),
+      sorter: (a, b) => a.SKU.localeCompare(b.SKU),
     },
     {
       title: "Product",
@@ -63,10 +68,14 @@ const ProductListPage = () => {
       render: (text, record) => (
         <a onClick={() => handleUpdateProduct(record)}>{text}</a>
       ),
+      sorter: (a, b) => a.title.localeCompare(b.title),
+      ...getColumnSearchProps("title", searchInput, setSearchedColumn),
     },
     {
       title: "Brand",
       dataIndex: "brand",
+      sorter: (a, b) => a.brand.localeCompare(b.brand),
+      ...getColumnSearchProps("brand", searchInput, setSearchedColumn),
     },
     {
       title: "Category",
@@ -84,6 +93,7 @@ const ProductListPage = () => {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.category.name.startsWith(value),
+      sorter: (a, b) => a.category.name.localeCompare(b.category.name),
     },
     {
       title: "Price",
@@ -94,6 +104,27 @@ const ProductListPage = () => {
       title: "Stock",
       dataIndex: "quantity",
       sorter: (a, b) => a.quantity - b.quantity,
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      filters: [
+        {
+          text: "Active",
+          value: "Active",
+        },
+        {
+          text: "Inactive",
+          value: "Inactive",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.status.startsWith(value),
+      sorter: (a, b) => a.status - b.status,
+      render: (status) => (
+        <Tag color={status === "Active" ? "green" : "red"}>{status}</Tag>
+      ),
     },
 
     {

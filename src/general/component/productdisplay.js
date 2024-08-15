@@ -109,9 +109,6 @@ const Productdisplay = () => {
             </Radio.Group>
             <MB20 />
             <Flex gap="small">
-              <Button className="colored-background btn" shape="round">
-                Buy Now
-              </Button>
               <Button
                 className="transparent-background btn"
                 shape="round"

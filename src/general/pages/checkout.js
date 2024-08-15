@@ -28,7 +28,6 @@ const Checkout = () => {
   const [cartData, setCartData] = useState();
   const [form] = Form.useForm();
   const shippingCharges = 30;
-  const transaction = "successs";
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -91,15 +90,43 @@ const Checkout = () => {
 
   const handlePlaceOrder = async () => {
     try {
-      if (transaction === "successs") {
-        const orderResponse = await placeOrder(userToken, {
-          addressData: addressData || userData.address,
-        });
-        if (orderResponse) {
-          message.success("Order saved successfully");
-        }
-      }
+      const options = {
+        key: "",
+        amount: cartData?.totalPrice * 100,
+        currency: "INR",
+        name: "Ezlil",
+        description: "Order Payment",
+        handler: async (response) => {
+          console.log("Payment Response:", response);
+          const payment_id = response.razorpay_payment_id;
+
+          const orderResponse = await placeOrder(
+            userToken,
+            {
+              addressData: addressData || userData.address,
+            },
+            payment_id
+          );
+
+          if (orderResponse) {
+            message.success("Order placed successfully");
+          } else {
+            message.error("Order placement failed");
+          }
+        },
+        prefill: {
+          name: userData?.name,
+          email: userData?.email,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+      console.log("Opening Razorpay...");
+      const payment = new Razorpay(options);
+      payment.open();
     } catch (error) {
+      console.error("Error placing order:", error);
       message.error("Order is not placed");
     }
   };
@@ -336,7 +363,7 @@ const Checkout = () => {
                       </Col>
                       <Col span={4}>
                         <Typography className="ez-ls-h7">
-                          ₹ {item.price} {/* Show product price */}
+                          ₹ {item.price}
                         </Typography>
                       </Col>
                     </Row>

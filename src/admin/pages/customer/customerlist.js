@@ -7,19 +7,24 @@ import {
   Row,
   Select,
   Table,
+  Tag,
   Typography,
   message,
 } from "antd";
 import Search from "antd/es/transfer/search";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { PlusOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import { deleteCustomerByID, getCustomerDetails } from "../../api/customer";
 import { useNavigate } from "react-router-dom";
 import { MB05 } from "../../../general/component/widget";
+import { getColumnSearchProps } from "../../../utlils/table";
 
 const CustomerListPage = () => {
   const [customerData, setCustomerData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
@@ -45,37 +50,63 @@ const CustomerListPage = () => {
       render: (text, record) => (
         <a onClick={() => handleUpdateCustomer(record)}>{text}</a>
       ),
+      sorter: (a, b) => a.firstName.localeCompare(b.firstName),
     },
     {
       title: "Email",
       dataIndex: "email",
+      sorter: (a, b) => a.email.localeCompare(b.email),
+      ...getColumnSearchProps("email", searchInput, setSearchedColumn),
     },
 
     {
       title: "User Role",
       dataIndex: "role",
+      filters: [
+        {
+          text: "SuperAdmin",
+          value: "SuperAdmin",
+        },
+        {
+          text: "Admin",
+          value: "Admin",
+        },
+        {
+          text: "User",
+          value: "User",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.role.startsWith(value),
+      sorter: (a, b) => a.role.localeCompare(b.role),
     },
     {
       title: "Phone",
       dataIndex: "mobile",
+      sorter: (a, b) => a.mobile.localeCompare(b.mobile),
     },
-    // {
-    //   title: "Status",
-    //   dataIndex: "status",
-    //   filters: [
-    //     {
-    //       text: "Active",
-    //       value: "Active",
-    //     },
-    //     {
-    //       text: "Inactive",
-    //       value: "Inactive",
-    //     },
-    //   ],
-    //   filterMode: "tree",
-    //   filterSearch: true,
-    //   onFilter: (value, record) => record.name.startsWith(value),
-    // },
+    {
+      title: "Status",
+      dataIndex: "status",
+      filters: [
+        {
+          text: "Active",
+          value: "Active",
+        },
+        {
+          text: "Inactive",
+          value: "Inactive",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.status.startsWith(value),
+      sorter: (a, b) => a.status - b.status,
+      render: (status) => (
+        <Tag color={status === "Active" ? "green" : "red"}>{status}</Tag>
+      ),
+    },
     {
       title: "Action",
       dataIndex: "action",
@@ -109,15 +140,9 @@ const CustomerListPage = () => {
       message.error("Failed to delete customer");
     }
   };
-  // const rowSelection = {
-  //   onChange: (selectedRowKeys, selectedRows) => {
-  //     console.log(
-  //       `selectedRowKeys: ${selectedRowKeys}`,
-  //       "selectedRows: ",
-  //       selectedRows
-  //     );
-  //   },
-  // };
+  const filteredData = customerData.filter((customer) =>
+    customer.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <Row gutter={[16, 16]} className="common-padding">
       <Col span={24}>
@@ -150,26 +175,12 @@ const CustomerListPage = () => {
           gutter={[16, 16]}
         >
           <Col span={6}>
-            <Flex gap="small">
-              <Search placeholder="search" allowClear />
-              <Select
-                style={{
-                  width: 120,
-                }}
-                allowClear
-                placeholder={"--Select--"}
-                options={[
-                  {
-                    value: "admin",
-                    label: "Admin",
-                  },
-                  {
-                    value: "user",
-                    label: "User",
-                  },
-                ]}
-              />
-            </Flex>
+            <Search
+              placeholder="search"
+              allowClear
+              onSearch={(value) => setSearchTerm(value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </Col>
 
           <Col span={18} style={{ textAlign: "end" }}>
@@ -184,11 +195,7 @@ const CustomerListPage = () => {
           <Col span={24}>
             <Table
               columns={customerColumn}
-              // rowSelection={{
-              //   type: "checkbox",
-              //   ...rowSelection,
-              // }}
-              dataSource={customerData}
+              dataSource={filteredData}
               loading={loading}
               rowKey="email"
             />

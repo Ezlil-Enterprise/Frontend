@@ -47,6 +47,8 @@ import Productdisplay from "./component/productdisplay";
 import Cart from "./pages/cart";
 import AddressInfo from "./pages/address";
 import Checkout from "./pages/checkout";
+import { getAvatarColor, getInitials } from "../utlils/general";
+import logo from "../general/asset/image/logo.png";
 
 const GeneraIndexPage = () => {
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
@@ -175,7 +177,11 @@ const GeneraIndexPage = () => {
       gutter={[16, 16]}
     >
       <Col span={5}>
-        <Avatar size="large" icon={<UserOutlined />} />
+        <Avatar
+          style={{ backgroundColor: getAvatarColor(getInitials(userInfo)) }}
+        >
+          {getInitials(userInfo)}
+        </Avatar>
       </Col>
       <Col span={19}>
         <Row>
@@ -265,10 +271,7 @@ const GeneraIndexPage = () => {
           <Header style={{ backgroundColor: "#ffffff" }}>
             <Row align="middle">
               <Col span={4}>
-                <Image
-                  src="./images/logo.png"
-                  style={{ width: "60px", height: "60px" }}
-                />
+                <Image src={logo} style={{ width: "60px", height: "60px" }} />
               </Col>
               <Col span={12}>
                 <Menu

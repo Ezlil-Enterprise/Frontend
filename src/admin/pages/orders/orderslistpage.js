@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState } from "react";
 import {
   Breadcrumb,
   Col,
@@ -6,23 +7,27 @@ import {
   Table,
   Tag,
   Typography,
-  message,
   Input,
   Button,
   Space,
+  message,
 } from "antd";
 import {
   SearchOutlined,
   DeleteOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import React, { useEffect, useRef, useState } from "react";
-import { getCustomerDetailsByID } from "../../api/customer";
 import { useNavigate } from "react-router-dom";
-import { deleteOrderByID, getAllOrders } from "../../api/orders";
 import Cookies from "js-cookie";
+import { getCustomerDetailsByID } from "../../api/customer";
+import { deleteOrderByID, getAllOrders } from "../../api/orders";
 import { MB05 } from "../../../general/component/widget";
-import { filterWithDateRange } from "../../../utlils/table";
+import {
+  filterWithDateRange,
+  handleSearch,
+  handleReset,
+  getColumnSearchProps,
+} from "../../../utlils/table";
 import { format } from "date-fns";
 
 const OrdersListPage = () => {
@@ -57,83 +62,6 @@ const OrdersListPage = () => {
     fetchData();
   }, [userToken]);
 
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchedColumn(dataIndex);
-  };
-
-  const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchedColumn("");
-  };
-
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ marginBottom: 8, display: "block" }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
-    ),
-    onFilter: (value, record) => {
-      const recordValue = Array.isArray(dataIndex)
-        ? dataIndex.reduce((o, i) => o[i], record)
-        : record[dataIndex];
-      return (
-        recordValue &&
-        recordValue.toString().toLowerCase().includes(value.toLowerCase())
-      );
-    },
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-  });
-
   const ordersColumn = [
     {
       title: "Name",
@@ -142,18 +70,25 @@ const OrdersListPage = () => {
         <a onClick={() => handleUpdateOrder(record)}>{text}</a>
       ),
       sorter: (a, b) => a.user.firstName.localeCompare(b.user.firstName),
-      ...getColumnSearchProps(["user", "firstName"]),
+      ...getColumnSearchProps(
+        ["user", "firstName"],
+        searchInput,
+        setSearchedColumn
+      ),
     },
     {
       title: "Email",
       dataIndex: ["user", "email"],
       sorter: (a, b) => a.user.email.localeCompare(b.user.email),
-      ...getColumnSearchProps(["user", "email"]),
+      ...getColumnSearchProps(
+        ["user", "email"],
+        searchInput,
+        setSearchedColumn
+      ),
     },
     {
       title: "Order ID",
       dataIndex: "_id",
-      ...getColumnSearchProps("_id"),
     },
     {
       title: "Order Date",
@@ -163,8 +98,16 @@ const OrdersListPage = () => {
       ),
       sorter: (a, b) => new Date(a.orderDate) - new Date(b.orderDate),
       ...filterWithDateRange({
-        handleSearch,
-        handleReset,
+        handleSearch: (selectedKeys, confirm) =>
+          handleSearch(
+            selectedKeys,
+            confirm,
+            "orderDate",
+            setSearchedColumn,
+            true
+          ),
+        handleReset: (clearFilters, setSelectedKeys) =>
+          handleReset(clearFilters, setSearchedColumn, setSelectedKeys, true),
         dataIndex: "orderDate",
       }),
     },
@@ -236,7 +179,9 @@ const OrdersListPage = () => {
       message.error("Failed to delete order");
     }
   };
-
+  const filteredData = orderData.filter((order) =>
+    order._id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <Row gutter={[16, 16]} className="common-padding">
       <Col span={24}>
@@ -280,9 +225,7 @@ const OrdersListPage = () => {
           <Col span={24}>
             <Table
               columns={ordersColumn}
-              dataSource={orderData.filter((order) =>
-                order._id.toLowerCase().includes(searchTerm.toLowerCase())
-              )}
+              dataSource={filteredData}
               loading={loading}
               rowKey="_id"
             />

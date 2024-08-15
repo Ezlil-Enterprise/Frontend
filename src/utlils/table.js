@@ -1,10 +1,8 @@
-import moment from "moment";
-import { DatePicker } from "antd";
+import { DatePicker, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Row, Col } from "antd";
 import React from "react";
 import { convertToLocalTimeFormat } from "./date";
-
 export function compareCaseIds(propertyName) {
   return (a, b) => {
     const aDigits = parseInt((a[propertyName] || "").match(/\d+$/)[0]);
@@ -39,56 +37,58 @@ const getNestedValue = (obj, path) => {
   );
 };
 
-export const filterWithInputSearch = (
+export const getColumnSearchProps = (
   dataIndex,
-  setColumnSearch,
-  searchInput
+  searchInputRef,
+  setSearchColumn
 ) => ({
   filterDropdown: ({
     setSelectedKeys,
     selectedKeys,
     confirm,
     clearFilters,
+    close,
   }) => (
     <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
       <Input
-        ref={searchInput}
-        placeholder="Search..."
-        value={selectedKeys[0] || ""}
+        ref={searchInputRef}
+        placeholder={`Search ${dataIndex}`}
+        value={selectedKeys[0]}
         onChange={(e) =>
           setSelectedKeys(e.target.value ? [e.target.value] : [])
         }
-        onPressEnter={() =>
-          handleSearch(selectedKeys, confirm, setColumnSearch)
-        }
-        style={{
-          marginBottom: 8,
-          display: "block",
-        }}
+        onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        style={{ marginBottom: 8, display: "block" }}
       />
-      <Row gutter={[16, 16]}>
-        <Col span={12} align="left">
-          <Button
-            disabled={!selectedKeys[0]}
-            onClick={() =>
-              clearFilters && handleReset(clearFilters, setColumnSearch)
-            }
-            size="small"
-            type="link"
-          >
-            Reset
-          </Button>
-        </Col>
-        <Col span={12} align="right">
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, setColumnSearch)}
-            size="small"
-          >
-            Ok
-          </Button>
-        </Col>
-      </Row>
+      <Space>
+        <Button
+          type="primary"
+          onClick={() =>
+            handleSearch(selectedKeys, confirm, dataIndex, setSearchColumn)
+          }
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => handleReset(clearFilters, setSearchColumn)}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+        <Button
+          type="link"
+          size="small"
+          onClick={() => {
+            close();
+          }}
+        >
+          Close
+        </Button>
+      </Space>
     </div>
   ),
   filterIcon: (filtered) => (
@@ -96,7 +96,7 @@ export const filterWithInputSearch = (
   ),
   onFilter: (value, record) => {
     const recordValue = Array.isArray(dataIndex)
-      ? getNestedValue(record, dataIndex)
+      ? dataIndex.reduce((o, i) => o[i], record)
       : record[dataIndex];
     return (
       recordValue &&
@@ -105,10 +105,9 @@ export const filterWithInputSearch = (
   },
   onFilterDropdownOpenChange: (visible) => {
     if (visible) {
-      setTimeout(() => searchInput?.current?.select(), 100);
+      setTimeout(() => searchInputRef.current?.select(), 100);
     }
   },
-  render: (text) => text,
 });
 
 export const filterWithDateRange = ({
@@ -167,14 +166,30 @@ export const filterWithDateRange = ({
   render: (text) => <span>{convertToLocalTimeFormat(text)}</span>,
 });
 
-const handleSearch = (selectedKeys, confirm, dataIndex, setColumnSearch) => {
+export const handleSearch = (
+  selectedKeys,
+  confirm,
+  dataIndex,
+  setSearchColumn,
+  isDateRange = false
+) => {
   confirm();
-  setColumnSearch(selectedKeys[0]);
+  if (!isDateRange) {
+    setSearchColumn(dataIndex);
+  }
 };
 
-const handleReset = (clearFilters, setColumnSearch) => {
+export const handleReset = (
+  clearFilters,
+  setSearchColumn,
+  setSelectedKeys,
+  isDateRange = false
+) => {
   clearFilters();
-  setColumnSearch("");
+  setSearchColumn("");
+  if (isDateRange && setSelectedKeys) {
+    setSelectedKeys([]);
+  }
 };
 
 export const filterWithSearchAndCheckboxOptions = (options) => {

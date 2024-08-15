@@ -12,6 +12,7 @@ import LeftMenu from "../../admin/components/left_menu.js";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { getUserDetails } from "../api/authentication.js";
+import { getAvatarColor, getInitials } from "../../utlils/general.js";
 
 const { Header, Content } = Layout;
 
@@ -60,10 +61,15 @@ const MainLayout = ({ children }) => {
                       alignItems: "center",
                     }}
                   >
-                    <MoonOutlined />
                     <BellOutlined />
                     <LogoutOutlined onClick={handleLogout} />
-                    <Avatar src="./images/user.jpg" />
+                    <Avatar
+                      style={{
+                        backgroundColor: getAvatarColor(getInitials(userInfo)),
+                      }}
+                    >
+                      {getInitials(userInfo)}
+                    </Avatar>
                   </Space>
                 </Col>
               </Row>
