@@ -44,7 +44,7 @@ const Checkout = () => {
           setCartData(cartDataResponse);
         }
       } catch (error) {
-        console.error("Error:", error);
+        message.error("Error:", error);
       }
     };
 
@@ -97,7 +97,6 @@ const Checkout = () => {
         name: "Ezlil",
         description: "Order Payment",
         handler: async (response) => {
-          console.log("Payment Response:", response);
           const payment_id = response.razorpay_payment_id;
 
           const orderResponse = await placeOrder(
@@ -122,11 +121,9 @@ const Checkout = () => {
           color: "#3399cc",
         },
       };
-      console.log("Opening Razorpay...");
       const payment = new Razorpay(options);
       payment.open();
     } catch (error) {
-      console.error("Error placing order:", error);
       message.error("Order is not placed");
     }
   };

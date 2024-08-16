@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Avatar,
+  Badge,
   Button,
   Col,
   Dropdown,
@@ -49,15 +50,18 @@ import AddressInfo from "./pages/address";
 import Checkout from "./pages/checkout";
 import { getAvatarColor, getInitials } from "../utlils/general";
 import logo from "../general/asset/image/logo.png";
+import { getCartDetails } from "./api/cart";
 
 const GeneraIndexPage = () => {
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
   const [isSignInModalVisible, setIsSignInModalVisible] = useState(false);
   const [signUpForm] = Form.useForm();
   const [signInForm] = Form.useForm();
+  const [cartItemCount, setCartItemCount] = useState(0);
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user.userInfo);
   const navigate = useNavigate();
+  const [userToken, setUserToken] = useState(Cookies.get("user_token"));
 
   const handleShowSignUpModal = () => {
     signUpForm.resetFields();
@@ -73,7 +77,9 @@ const GeneraIndexPage = () => {
     setIsSignUpModalVisible(false);
     setIsSignInModalVisible(false);
   };
-
+  useEffect(() => {
+    fetchCartData();
+  }, []);
   const handleSignUp = async () => {
     try {
       const values = await signUpForm.validateFields();
@@ -155,7 +161,17 @@ const GeneraIndexPage = () => {
   const handleOrdersClick = () => {
     navigate("/orders");
   };
-
+  const fetchCartData = async () => {
+    try {
+      if (userToken) {
+        const cartDataResponse = await getCartDetails(userToken);
+        const cartItems = cartDataResponse?.cartItems || [];
+        setCartItemCount(cartItems.length);
+      }
+    } catch (error) {
+      message.error("Error:", error);
+    }
+  };
   const menuitems = [
     { key: "home", label: <Link to="/">Home</Link> },
     { key: "shampoo", label: <Link to="/shampoo">Shampoo</Link> },
@@ -271,7 +287,11 @@ const GeneraIndexPage = () => {
           <Header style={{ backgroundColor: "#ffffff" }}>
             <Row align="middle">
               <Col span={4}>
-                <Image src={logo} style={{ width: "60px", height: "60px" }} />
+                <Image
+                  src={logo}
+                  style={{ width: "60px", height: "60px" }}
+                  preview={false}
+                />
               </Col>
               <Col span={12}>
                 <Menu
@@ -290,16 +310,20 @@ const GeneraIndexPage = () => {
                 span={8}
                 style={{ display: "flex", justifyContent: "flex-end" }}
               >
-                <SearchOutlined
-                  style={{ fontSize: "1.4em", marginRight: "20px" }}
-                />
-                <ShoppingCartOutlined
-                  style={{ fontSize: "1.4em", marginRight: "20px" }}
-                  onClick={() => navigate("/cart")}
-                />
-                <Dropdown overlay={userMenu}>
-                  <UserOutlined style={{ fontSize: "1.4em" }} />
-                </Dropdown>
+                <Flex gap="small">
+                  {" "}
+                  <SearchOutlined
+                    style={{ fontSize: "1.4em", marginRight: "15px" }}
+                  />
+                  <Dropdown overlay={userMenu}>
+                    <UserOutlined
+                      style={{ fontSize: "1.4em", marginRight: "15px" }}
+                    />
+                  </Dropdown>
+                  <Badge count={cartItemCount} offset={[10, 0]} showZero>
+                    <ShoppingCartOutlined style={{ fontSize: "20px" }} />
+                  </Badge>
+                </Flex>
               </Col>
             </Row>
           </Header>
