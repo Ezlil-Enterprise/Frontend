@@ -321,7 +321,10 @@ const GeneraIndexPage = () => {
                     />
                   </Dropdown>
                   <Badge count={cartItemCount} offset={[10, 0]} showZero>
-                    <ShoppingCartOutlined style={{ fontSize: "20px" }} />
+                    <ShoppingCartOutlined
+                      style={{ fontSize: "20px" }}
+                      onClick={() => navigate("/cart")}
+                    />
                   </Badge>
                 </Flex>
               </Col>

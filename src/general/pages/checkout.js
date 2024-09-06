@@ -19,7 +19,11 @@ import { getCartDetails } from "../api/cart";
 import product1 from "../asset/image/product.jpg";
 import { placeOrder } from "../api/order";
 import Footercomponent from "../component/card/footer";
-import { MIDDLEWARE_API_URL, PINCODE_API_URL } from "../../constants";
+import {
+  MIDDLEWARE_API_URL,
+  PINCODE_API_URL,
+  RAZORPAY_KEY_ID,
+} from "../../constants";
 
 const Checkout = () => {
   const [userToken, setUserToken] = useState(Cookies.get("user_token"));
@@ -91,7 +95,7 @@ const Checkout = () => {
   const handlePlaceOrder = async () => {
     try {
       const options = {
-        key: "",
+        key: RAZORPAY_KEY_ID,
         amount: cartData?.totalPrice * 100,
         currency: "INR",
         name: "Ezlil",
